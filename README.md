@@ -868,7 +868,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
 | `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
 | `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | No | Leg status. Typical values: `NEW`, `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELED`. |
+| `input.status` / `output.status` | `string` | No | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for a specific operation leg. |
 | `input.expirationDate` / `output.expirationDate` | `string/null` | No | Expiration timestamp for operation leg context, if provided. |
 | `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider leg. |
@@ -1122,7 +1122,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
 | `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
 | `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | No | Leg status. Typical values: `NEW`, `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELED`. |
+| `input.status` / `output.status` | `string` | No | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for a specific operation leg. |
 | `input.expirationDate` / `output.expirationDate` | `string/null` | No | Expiration timestamp for operation leg context, if provided. |
 | `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider leg. |
@@ -1275,7 +1275,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
 | `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
 | `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | No | Leg status. Typical values: `NEW`, `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELED`. |
+| `input.status` / `output.status` | `string` | No | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for specific operation leg in history. |
 | `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider leg. |
 | `input.paymentType` / `output.paymentType` | `string/null` | No | Provider payment type metadata. |
@@ -1581,7 +1581,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
 | `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
 | `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | Yes | Leg status. Typical values: `NEW`, `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELED`. |
+| `input.status` / `output.status` | `string` | Yes | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for specific operation leg. |
 | `input.expirationDate` / `output.expirationDate` | `string/null` | No | Expiration timestamp for operation leg context, if provided. |
 | `input.provider` / `output.provider` | `string/null` | No | Provider code when operation leg uses fiat-provider route. |
