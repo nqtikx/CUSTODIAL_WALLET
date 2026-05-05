@@ -2,18 +2,17 @@
 
 The custodial wallet is used for operations with the client internal balance: deposit, withdrawal, buy, sell, and asset conversion.  
 In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Conversion`), and for backend integration only merchant endpoints are described below.  
-All examples below use `{{URL}}` format and `x-api-key`.
-
-## Headers
-- `x-api-key: {{apiKey}}`
-- `Content-Type: application/json`
 
 ---
+
+> BASE_URL https://api.dev.wbdevel.net/
 
 ## 0) Wallet base data
 
 ### Step 0.1 Get available assets
 **POST** `{{URL}}/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
+
+**Headers** `x-api-key`
 
 **Response**
 ```json
@@ -32,6 +31,9 @@ All examples below use `{{URL}}` format and `x-api-key`.
   ]
 }
 ```
+
+**Headers**
+
 
 ### Step 0.2 Get current balance operations
 **GET** `{{URL}}/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
