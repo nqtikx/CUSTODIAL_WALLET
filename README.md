@@ -661,10 +661,6 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 
 Buy flow is used when the client pays fiat through a provider and receives crypto to internal wallet balance. The flow is quote first, then order creation.
 
-### Step 3.1 Create Quote
-
-Use this endpoint to calculate a buy quote before order creation. Quote fixes the rate, fees, input amount, output amount, and expiration time.
-
 ### Step 3.1 Create quote
 
 Use this endpoint to create a buy quote and lock rate/amounts for a short time. Use the response to display final buy terms and pass quote id to order creation.
@@ -882,9 +878,13 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
 | `conditions.exchangeRateValue` | `string` | No | Exchange rate applied for this quote/order. |
 | `conditions.actualRateValue` | `string` | No | Effective client-facing rate after adjustments. |
+| `recalculationReason` | `string/null` | No | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
 | `clientId` | `string` | Yes | Client id for this order. |
 | `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
+| `completionDate` | `string/null` | No | Order completion timestamp when order is finished; `null` while order is still active. |
+| `creationDate` | `string` | Yes | Order creation timestamp in server timezone format. |
+| `sessionId` | `string/null` | No | Optional client session identifier bound to this order. |
 | `input` | `object` | Yes | Source operation details. |
 | `output` | `object` | Yes | Destination operation details. |
 | `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
@@ -903,6 +903,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `input.toToken` / `output.toToken` | `string/null` | No | Destination payment token used by provider leg. |
 | `input.link` / `output.link` | `string/null` | No | Provider payment URL for redirect/confirmation flows. |
 | `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | No | External provider transaction id for reconciliation. |
+| `input.processorTransactionNumber` / `output.processorTransactionNumber` | `string/null` | No | External provider transaction number/reference shown by provider systems for support and reconciliation. |
 | `input.post` / `output.post` | `string/null` | No | Additional provider payload or form-POST metadata when present. |
 | `input.paymentSystem` / `output.paymentSystem` | `string/null` | No | Payment system metadata returned by provider integration. |
 
@@ -920,10 +921,6 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 ## 4) Sell (`sell`) - Merchant V3 Flow
 
 Sell flow is used when the client sells crypto from internal wallet balance and receives fiat through a provider.
-
-### Step 4.1 Create Quote
-
-Use this endpoint to calculate a sell quote before creating the order.
 
 ### Step 4.1 Create quote
 
@@ -1174,10 +1171,6 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 ## 5) Operation History / Details
 
 History endpoint is used to fetch created orders and their operation details for support, reconciliation, and client-facing history.
-
-### Step 5.1 Get Order History / Details
-
-Use this endpoint to search merchant orders by client, operation type, status, asset, or date range.
 
 ### Step 5.1 Get order history/details
 
