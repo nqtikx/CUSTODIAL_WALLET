@@ -8,6 +8,8 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 ## 0) Wallet base data
 
 ### Step 0.1 Get available assets
+
+Use this endpoint to retrieve all fiat and crypto assets available for custodial wallet operations. Use the response to build asset selectors and validate supported routes before any operation.
 **POST** `/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
 
 ### Headers
@@ -31,19 +33,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `destination` | `string` | No | Query parameter that filters assets for a specific flow. For custodial wallet use `SDK_ACCOUNTING`. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -56,15 +58,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `cryptoAssets[].network` | `string` | No | Blockchain network that must be used for deposits/withdrawals of this asset. |
 | `cryptoAssets[].protocol` | `string` | No | Token protocol shown to prevent sending funds through the wrong network. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing or invalid. |
-| `403 Forbidden` | HTTP error | No | Merchant does not have access to this endpoint. |
-| `400 Bad Request` | HTTP error | No | Invalid or unsupported query parameter value. |
+| `400 INVALID_DESTINATION` | Business error | No | `destination` value cannot be mapped to supported enum for merchant assets. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant is authenticated but does not have `ASSET_API` permission. |
+| `429 Too Many Requests` | HTTP error | No | Rate limit is exceeded for this endpoint. |
+
 
 ### Step 0.2 Get current balance operations
+
+Use this endpoint to fetch the client's current fiat and crypto wallet operations and statuses. Use the response to show live operation state in UI and support dashboards.
 **GET** `/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
 
 ### Headers
@@ -106,19 +112,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to one merchant client and return only that client's wallet data. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -139,15 +145,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `txHash` | `string/null` | No | Blockchain transaction hash after the crypto transfer is detected; use for explorer links and reconciliation. |
 | `createdAt` | `string` | Yes | Operation creation date/time. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing or invalid. |
-| `403 Forbidden` | HTTP error | No | Merchant does not have access to the client or endpoint. |
-| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or client is not linked to the merchant. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to the merchant in access validation. |
+| `400 Bad Request` | HTTP error | No | Request parameters are invalid or cannot be parsed. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission for this client or endpoint. |
+
 
 ### Step 0.3 Get enhanced merchant account balances
+
+Use this endpoint to get enhanced merchant account balances grouped by currency type. Use the response to populate balance widgets and reconciliation summaries.
 **GET** `/api/v2/accounting/merchant/account/enhanced`
 
 ### Headers
@@ -203,19 +213,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | Body | `object` | No | No request body is required. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -231,17 +241,21 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `totalFiatUsdAmount` | `number` | Yes | Total fiat balances converted to USD. |
 | `totalCryptoUsdAmount` | `number` | Yes | Total crypto balances converted to USD. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing or invalid. |
-| `403 Forbidden` | HTTP error | No | Merchant is not allowed to access account balances. |
-| `500 Internal Server Error` | HTTP error | No | Accounting service or balance provider error. |
+| `400 Bad Request` | HTTP error | No | Request is malformed or unsupported by accounting endpoint. |
+| `401 Unauthorized` | HTTP error | Yes | Authorization header is missing or invalid. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission to read enhanced balances. |
+| `500 Internal Server Error` | HTTP error | No | Unexpected accounting/balance aggregation failure. |
+
 
 ## 1) Deposit (`deposit`)
 
 ### Step 1.1 Create crypto deposit
+
+Use this endpoint to create a crypto deposit operation and generate a destination address. Use the response to provide deposit instructions and track the operation by transaction id.
 **POST** `/api/v2/exchange/merchant/balance/crypto/deposit`
 
 ### Headers
@@ -268,13 +282,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -284,23 +298,27 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `asset.network` | `string` | Yes | Blockchain network for address generation; prevents creating a deposit address for the wrong network. |
 | `asset.amount` | `number` | Yes | Amount expected from the client; used for limits, display, and operation tracking. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `transactionId` | `string` | Yes | WhiteBird transaction identifier for tracking operation status, support cases, and reconciliation. |
 | `depositCryptoAddress` | `string` | Yes | Blockchain address that must be shown to the client as the destination for crypto deposit. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_ASSET` | Business error | No | Asset code/network is missing or unsupported. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client status does not allow wallet deposit. |
-| `400 CLIENT_NOT_FOUND` | Business error | No | Client is not found or not linked to merchant. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 ACTIVE_DEPOSIT_REQUEST_FOUND` | Business error | No | An uncompleted deposit already exists for this client/asset. |
+| `400 INVALID_AMOUNT` | Business error | No | Provided amount is invalid for deposit constraints. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to the merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission for this operation. |
+
 
 ### Step 1.2 Get fiat payment methods
+
+Use this endpoint to retrieve available fiat payment methods for the selected client and flow. Use the response to select a valid payment token for deposit or withdrawal requests.
 **POST** `/api/v2/exchange/merchant/payment/method`
 
 ### Headers
@@ -335,13 +353,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 ]
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -353,7 +371,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `isCrypto` | `boolean` | No | Optional filter for crypto-related payment methods. |
 | `countryGroup` | `string` | No | Optional country group filter. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -369,15 +387,21 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `currency` | `string` | No | Primary fiat currency. |
 | `supportedCurrencies` | `array of strings` | No | Fiat currencies supported by this payment method. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 CLIENT_NOT_FOUND` | Business error | No | Client is not found or not linked to merchant. |
-| `400 INVALID_PAYMENT_PROVIDER` | Business error | No | Provider filter is unsupported. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to the merchant. |
+| `400 INVALID_ORDER_TYPE` | Business error | No | `orderType` value is unsupported for payment method resolution. |
+| `400 INVALID_FIAT_ASSET` | Business error | No | `fiatAsset` value is unsupported for the selected flow. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no `PAYMENT_API` permission for this client. |
+| `429 Too Many Requests` | HTTP error | No | Rate limit is exceeded for payment methods endpoint. |
+
 
 ### Step 1.3 Create fiat deposit
+
+Use this endpoint to initiate a fiat deposit through a selected payment provider. Use the response to redirect the client to provider payment flow or render payment details.
 **POST** `/api/v2/exchange/merchant/balance/fiat/deposit`
 
 ### Headers
@@ -410,13 +434,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -428,7 +452,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `asset.code` | `string` | Yes | Fiat currency to deposit. |
 | `asset.amount` | `number` | Yes | Fiat amount the client should deposit to the wallet. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -439,18 +463,22 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `paymentDetails.paymentLink` | `string` | No | Provider payment URL. |
 | `paymentDetails.notificationPhoneNumber` | `string/null` | No | Phone number returned by provider when the payment scenario requires notification or additional confirmation. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_PAYMENT_TOKEN` | Business error | No | `paymentToken`/`internalToken` is missing, invalid, or unavailable. |
-| `400 INVALID_FIAT_PROVIDER` | Business error | No | Provider is unsupported for this currency or flow. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform fiat deposit. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 BALANCE_OPERATION_PROCESSING_ERROR` | Business error | No | Fiat provider operation cannot be started or processed. |
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | `paymentToken`/`internalToken` is invalid, restricted, or missing. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission for this operation. |
+
 
 ## 2) Send (`withdrawal`)
 
 ### Step 2.1 Calculate crypto withdrawal
+
+Use this endpoint to calculate crypto withdrawal fees and net payout before submission. Use the response to show final amounts and keep the calculation id for withdrawal creation.
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal/calculate`
 
 ### Headers
@@ -480,13 +508,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -496,7 +524,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `asset.network` | `string` | Yes | Blockchain network. |
 | `toAddress` | `string` | Yes | Destination crypto address. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -506,16 +534,20 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `receivedAmount` | `string` | Yes | Amount expected to be received after commission. |
 | `expirationDate` | `string` | No | Date/time when this calculation expires. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_ADDRESS` | Business error | No | Destination address is invalid for the selected network. |
-| `400 INVALID_AMOUNT` | Business error | No | Amount is below/above allowed limits or insufficient. |
-| `400 INVALID_ASSET` | Business error | No | Asset or network is unsupported. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 INVALID_ADDRESS` | Business error | No | Destination address is invalid for selected network or blocked as internal address. |
+| `400 INVALID_AMOUNT` | Business error | No | Amount is invalid (including fee greater than withdrawal amount). |
+| `400 ACTIVE_WITHDRAWAL_REQUEST_FOUND` | Business error | No | An uncompleted withdrawal already exists for this client/asset. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission for this operation. |
+
 
 ### Step 2.2 Create crypto withdrawal
+
+Use this endpoint to create a crypto withdrawal using a valid calculation context. Use the response to store transaction id and monitor withdrawal lifecycle.
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal`
 
 ### Headers
@@ -538,13 +570,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -553,22 +585,26 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `calculationId` | `string` | Yes | Calculation id returned by withdrawal calculation endpoint. |
 | `comment` | `string` | No | Optional memo/comment/tag for networks that require additional destination data. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `transactionId` | `string` | Yes | Created crypto withdrawal transaction identifier used for tracking status and support. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 CALCULATION_NOT_FOUND` | Business error | No | Calculation id is missing, expired, or not found. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform withdrawal. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Wallet balance is not enough for withdrawal. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 INVALID_CALCULATION` | Business error | No | `calculationId` is not found or expired. |
+| `400 INVALID_STATUS` | Business error | No | Withdrawal operation status does not allow execution. |
+| `400 ACTIVE_WITHDRAWAL_REQUEST_FOUND` | Business error | No | Another uncompleted withdrawal blocks this operation. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Operation is forbidden for this merchant (`AccessDeniedException`). |
+
 
 ### Step 2.3 Calculate fiat withdrawal
+
+Use this endpoint to calculate fiat withdrawal commission and expected payout amount. Use the response to confirm final withdrawal values with the client.
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
 
 ### Headers
@@ -598,13 +634,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -615,7 +651,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `asset.code` | `string` | Yes | Fiat currency. |
 | `asset.amount` | `number` | Yes | Fiat amount requested from the client wallet before provider fees are applied. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -625,16 +661,20 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `receivedAmount` | `string` | Yes | Amount expected after commission. |
 | `expirationDate` | `string/null` | No | Date/time until which the calculated fees and amounts are valid. `null` means the provider did not return an expiration time. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is missing or unavailable. |
-| `400 INVALID_AMOUNT` | Business error | No | Amount is invalid or outside limits. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Wallet fiat balance is not enough. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 BALANCE_OPERATION_PROCESSING_ERROR` | Business error | No | Fiat withdrawal calculation cannot be produced by provider/flow. |
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is invalid, unavailable, or unsupported. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission for this operation. |
+
 
 ### Step 2.4 Create fiat withdrawal
+
+Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use the response to persist transaction id and track provider payout status.
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal`
 
 ### Headers
@@ -661,13 +701,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -679,24 +719,28 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `asset.code` | `string` | Yes | Fiat currency. |
 | `asset.amount` | `number` | Yes | Withdrawal amount. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `transactionId` | `string` | Yes | Created fiat withdrawal transaction identifier used for tracking payout status and reconciliation. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is missing, invalid, or restricted. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Wallet balance is not enough for withdrawal. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform fiat withdrawal. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 BALANCE_OPERATION_PROCESSING_ERROR` | Business error | No | Fiat withdrawal cannot be started or provider rejected operation. |
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token/internal token is invalid or restricted. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Operation is forbidden for this merchant (`AccessDeniedException`). |
+
 
 ## 3) Buy (`buy`) — merchant V3 flow
 
 ### Step 3.1 Create quote
+
+Use this endpoint to create a buy quote and lock rate/amounts for a short time. Use the response to display final buy terms and pass quote id to order creation.
 **POST** `/api/v3/exchange/merchant/quote`
 
 ### Headers
@@ -750,13 +794,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -770,7 +814,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `output.asset` | `string` | Yes | Crypto asset that will be credited to internal balance. |
 | `output.amount` | `number` | Conditional | Target amount. At least one of `input.amount` or `output.amount` is required. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -788,16 +832,21 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `input.paymentType` | `string` | No | Fiat payment type selected by provider configuration. |
 | `input.processingBank` | `string` | No | Processing bank selected for fiat provider route. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_QUOTE` | Business error | No | Quote request cannot be calculated with provided assets, amount, or payment details. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot create quote for this operation. |
-| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is invalid or restricted. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 INVALID_QUOTE` | Business error | No | Quote input is inconsistent or cannot be calculated for provided payment details. |
+| `400 CURRENCY_NOT_FOUND` | Business error | No | One of input/output assets is unknown. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Provided client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no `ORDER_V2_API` permission. |
+| `429 Too Many Requests` | HTTP error | No | Rate limit is exceeded for quote creation endpoint. |
+
 
 ### Step 3.2 Create buy order
+
+Use this endpoint to create a buy order from a valid non-expired quote. Use the response to track order execution and render provider/payment metadata.
 **POST** `/api/v3/exchange/merchant/order`
 
 ### Headers
@@ -871,19 +920,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `quoteId` | `string` | Yes | Quote identifier returned by quote creation. It fixes the calculated amounts/rates and must be used before quote expiration. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -898,18 +947,22 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `input.link` | `string/null` | No | Fiat provider payment URL that should be opened by the client when the payment flow requires redirect/link confirmation. |
 | `processorTransactionId` | `string/null` | No | External provider transaction identifier used to reconcile WhiteBird operation with fiat provider processing. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or not found. |
-| `400 INVALID_QUOTE` | Business error | No | Quote cannot be used to create order. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client is not allowed to create order. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or unknown. |
+| `400 INVALID_QUOTE` | Business error | No | Quote exists but cannot be used for order creation. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client status/checks do not allow order creation (for example testing not completed). |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no access to quote/client used by this order. |
+
 
 ## 4) Sell (`sell`) — merchant V3 flow
 
 ### Step 4.1 Create quote
+
+Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Use the response to show sell terms and pass quote id to order creation.
 **POST** `/api/v3/exchange/merchant/quote`
 
 ### Headers
@@ -963,13 +1016,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -982,7 +1035,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `output.provider` | `string` | Yes | Fiat provider. |
 | `output.token` | `string` | Conditional | Payment token for receiving fiat. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -997,16 +1050,20 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `output.paymentType` | `string` | No | Fiat payment type. |
 | `output.processingBank` | `string` | No | Processing bank selected by provider route. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_QUOTE` | Business error | No | Quote cannot be calculated. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Client wallet balance is not enough. |
-| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Fiat payment token is invalid or restricted. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 INVALID_QUOTE` | Business error | No | Quote input is inconsistent or cannot be calculated. |
+| `400 CURRENCY_NOT_FOUND` | Business error | No | Input/output asset is unknown. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no `ORDER_V2_API` permission. |
+
 
 ### Step 4.2 Create sell order
+
+Use this endpoint to create a sell order from a valid non-expired quote. Use the response to track order progress and payout operation details.
 **POST** `/api/v3/exchange/merchant/order`
 
 ### Headers
@@ -1080,19 +1137,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `quoteId` | `string` | Yes | Sell quote identifier returned by quote creation. It fixes the calculated sell amounts/rates and must be used before expiration. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1108,18 +1165,22 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `output.processingBank` | `string` | No | Processing bank selected by fiat provider route. |
 | `processorTransactionId` | `string/null` | No | External provider transaction identifier used to reconcile WhiteBird operation with fiat provider processing. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or not found. |
-| `400 INVALID_QUOTE` | Business error | No | Quote cannot be used for order creation. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Internal balance is not enough. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or unknown. |
+| `400 INVALID_QUOTE` | Business error | No | Quote exists but cannot be used for sell order creation. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Client internal balance is not enough for requested sell operation. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no access to quote/client used by this order. |
+
 
 ## 5) Operation history/details
 
 ### Step 5.1 Get order history/details
+
+Use this endpoint to fetch paged order history with optional filters and detailed operation data. Use the response to power history UI, reporting, and support investigations.
 **POST** `/api/v3/exchange/merchant/order/history?page=0&size=20&sort=creationDate,desc`
 
 ### Headers
@@ -1202,13 +1263,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1224,7 +1285,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `creationDateFrame.start` | `string` | No | Creation date range start. |
 | `creationDateFrame.end` | `string` | No | Creation date range end. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1242,19 +1303,24 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `number` | `number` | Yes | Current page number. |
 | `size` | `number` | Yes | Current page size. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_FILTER` | Business error | No | Filter value, date range, or pagination parameter is invalid. |
-| `400 CLIENT_NOT_FOUND` | Business error | No | One of provided clients is not found or not linked to merchant. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 Bad Request` | HTTP error | No | Filter body is invalid or missing required client filter (`Client id is required`). |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Provided client id/external client id is invalid for this merchant. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no permission for order history scope. |
+| `429 Too Many Requests` | HTTP error | No | Rate limit is exceeded for history endpoint. |
+
 
 ## 6) Conversion (`conversion`)
 
 For custodial wallet, conversion goes through internal balance (`USER_BALANCE` / `INTERNAL_BALANCE`).
 
 ### Step 6.1 Check limits
+
+Use this endpoint to check conversion min/max limits for the selected asset pair. Use the response to validate entered amounts before quote creation.
 **POST** `/api/v3/exchange/merchant/limit`
 
 ### Headers
@@ -1285,13 +1351,13 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1301,7 +1367,7 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 | `toAsset` | `string` | Yes | Destination asset. |
 | `toPaymentDetails.type` | `string` | Yes | Destination payment type. For conversion use `INTERNAL_BALANCE`. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1310,16 +1376,20 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 | `toMinAmount` | `string` | Yes | Minimum allowed destination amount. |
 | `toMaxAmount` | `string` | Yes | Maximum allowed destination amount. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 LIMIT_NOT_FOUND` | Business error | No | Limit configuration is missing for selected route. |
-| `400 INVALID_CURRENCY_PAIR` | Business error | No | Asset pair is unsupported. |
-| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform conversion. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 INVALID_MERCHANT_ID` | Business error | No | No merchant identifier could be resolved for limit calculation context. |
+| `400 INVALID_QUOTE` | Business error | No | Limit request contains invalid pair/payment details for calculation context. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no `LIMIT_V2_API` permission. |
+| `429 Too Many Requests` | HTTP error | No | Rate limit is exceeded for limit endpoint. |
+
 
 ### Step 6.2 Create quote
+
+Use this endpoint to create a conversion quote between internal balance assets. Use the response to show conversion terms and pass quote id to swap creation.
 **POST** `/api/v3/exchange/merchant/quote`
 
 ### Headers
@@ -1367,13 +1437,13 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1385,7 +1455,7 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 | `output.asset` | `string` | Yes | Destination asset. |
 | `output.amount` | `number` | Conditional | Destination amount. At least one side amount is required. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1400,16 +1470,20 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 | `output` | `object` | Yes | Calculated destination details. |
 | `feeAmount` | `string` | Yes | Fee amount on source/destination side. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 INVALID_QUOTE` | Business error | No | Quote cannot be calculated. |
-| `400 AMOUNT_OUT_OF_LIMIT` | Business error | No | Amount is outside allowed min/max. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Internal balance is not enough. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 INVALID_QUOTE` | Business error | No | Quote input is inconsistent or cannot be calculated. |
+| `400 CURRENCY_NOT_FOUND` | Business error | No | Asset id is unknown for conversion pair. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client status/checks do not allow conversion quote creation. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no `ORDER_V2_API` permission. |
+
 
 ### Step 6.3 Create swap operation
+
+Use this endpoint to create and execute a swap operation from a valid conversion quote. Use the response to persist order identifiers and final operation statuses.
 **POST** `/api/v3/exchange/merchant/order`
 
 ### Headers
@@ -1473,19 +1547,19 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 }
 ```
 
-#### Headers
+### Headers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
-#### Request
+### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
 | `quoteId` | `string` | Yes | Conversion quote identifier returned by quote creation. It fixes the conversion rate and amounts until expiration. |
 
-#### Response
+### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
@@ -1499,12 +1573,14 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 | `output` | `object` | Yes | Destination internal balance operation. |
 | `input.status` / `output.status` | `string` | Yes | Status of each operation leg. |
 
-#### Errors
+### Errors
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or not found. |
-| `400 INVALID_QUOTE` | Business error | No | Quote cannot be used for conversion. |
-| `400 INSUFFICIENT_BALANCE` | Business error | No | Source internal balance is not enough. |
-| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or unknown. |
+| `400 INVALID_QUOTE` | Business error | No | Quote exists but cannot be used for conversion order creation. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Source internal balance is not enough to execute conversion. |
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | HTTP error | No | Merchant has no access to quote/client used by this conversion. |
+
 
