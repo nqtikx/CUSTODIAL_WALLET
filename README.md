@@ -35,8 +35,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | No | No JSON body is sent. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
@@ -48,14 +47,14 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `fiatAssets` | `array<object>` | Yes | Fiat currencies available for the merchant flow. |
-| `fiatAssets[].id` | `string` | Yes | Internal fiat asset identifier. |
-| `fiatAssets[].code` | `string` | Yes | Display currency code. |
-| `cryptoAssets` | `array<object>` | Yes | Crypto assets available for the merchant flow. |
-| `cryptoAssets[].id` | `string` | Yes | Internal crypto asset identifier, including network-specific asset id when applicable. |
-| `cryptoAssets[].code` | `string` | Yes | Display crypto currency code. |
-| `cryptoAssets[].network` | `string` | No | Blockchain network used for the asset. |
-| `cryptoAssets[].protocol` | `string` | No | Token standard or protocol, for example `TRC-20`. |
+| `fiatAssets` | `array of objects` | Yes | List of fiat assets that can be shown to the client as available wallet currencies for this merchant flow. |
+| `fiatAssets[].id` | `string` | Yes | Internal asset identifier used in API requests and routing logic. |
+| `fiatAssets[].code` | `string` | Yes | Currency code that can be displayed to the client in UI. |
+| `cryptoAssets` | `array of objects` | Yes | List of crypto assets/networks that can be used in deposit, withdrawal, buy, sell, or conversion flows. |
+| `cryptoAssets[].id` | `string` | Yes | Internal crypto asset identifier used in API requests; may include network-specific suffixes such as `USDT_TRC`. |
+| `cryptoAssets[].code` | `string` | Yes | Asset ticker displayed to the client; can differ from `id` when asset is network-specific. |
+| `cryptoAssets[].network` | `string` | No | Blockchain network that must be used for deposits/withdrawals of this asset. |
+| `cryptoAssets[].protocol` | `string` | No | Token protocol shown to prevent sending funds through the wrong network. |
 
 #### Errors
 
@@ -111,21 +110,20 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | No | No JSON body is sent. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier whose active balance operations must be returned. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to one merchant client and return only that client's wallet data. |
 
 #### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `fiatOperations` | `array<object>` | Yes | Current fiat wallet operations. |
-| `cryptoOperations` | `array<object>` | Yes | Current crypto wallet operations. |
+| `fiatOperations` | `array of objects` | Yes | Current fiat wallet operations. |
+| `cryptoOperations` | `array of objects` | Yes | Current crypto wallet operations. |
 | `number` | `number` | Yes | Human-readable operation number. |
 | `accountType` | `string` | Yes | Balance account type. For custodial wallet use `WALLET`. |
 | `operationType` | `string` | Yes | Operation direction/type, for example `DEPOSIT` or `WITHDRAWAL`. |
@@ -138,7 +136,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `submitTimeout` | `string` | No | Crypto deposit timeout mode. |
 | `depositCryptoAddress` | `string` | No | Address where the user must send crypto for deposit. |
 | `network` | `string` | No | Blockchain network. |
-| `txHash` | `string \| null` | No | Blockchain transaction hash when known. |
+| `txHash` | `string/null` | No | Blockchain transaction hash after the crypto transfer is detected; use for explorer links and reconciliation. |
 | `createdAt` | `string` | Yes | Operation creation date/time. |
 
 #### Errors
@@ -209,8 +207,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | No | No JSON body is sent. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
@@ -222,7 +219,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `balances` | `array<object>` | Yes | List of merchant account balances. |
+| `balances` | `array of objects` | Yes | List of merchant account balances. |
 | `balances[].currency` | `string` | Yes | Currency or asset code. |
 | `balances[].type` | `string` | Yes | Balance type, for example `USER_BALANCE`. |
 | `balances[].amount` | `number` | Yes | Available balance amount. |
@@ -275,25 +272,24 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client who creates the wallet deposit. |
-| `accountType` | `string` | Yes | Target account type. For custodial wallet use `WALLET`. |
-| `asset.code` | `string` | Yes | Asset to deposit, for example `USDT_TRC`. |
-| `asset.network` | `string` | Yes | Blockchain network used for deposit address generation. |
-| `asset.amount` | `number` | Yes | Expected deposit amount. |
+| `clientId` | `string` | Yes | WhiteBird client identifier for whom the deposit operation is created. |
+| `accountType` | `string` | Yes | Determines which internal balance account is affected. For custodial wallet operations use `WALLET`. |
+| `asset.code` | `string` | Yes | Asset identifier used to create the operation; must match one of the assets returned by the assets endpoint. |
+| `asset.network` | `string` | Yes | Blockchain network for address generation; prevents creating a deposit address for the wrong network. |
+| `asset.amount` | `number` | Yes | Amount expected from the client; used for limits, display, and operation tracking. |
 
 #### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `transactionId` | `string` | Yes | Crypto transaction id created in WhiteBird. Use it for tracking. |
-| `depositCryptoAddress` | `string` | Yes | Blockchain address where the client sends crypto funds. |
+| `transactionId` | `string` | Yes | WhiteBird transaction identifier for tracking operation status, support cases, and reconciliation. |
+| `depositCryptoAddress` | `string` | Yes | Blockchain address that must be shown to the client as the destination for crypto deposit. |
 
 #### Errors
 
@@ -343,18 +339,17 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client whose payment methods must be returned. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to return only payment methods available to this client. |
 | `fiatAsset` | `string` | No | Fiat currency filter, for example `BYN`. |
 | `orderType` | `string` | No | Operation type filter, for example `BUY` for fiat input. |
 | `destination` | `string` | No | Flow filter. For custodial wallet use `SDK_ACCOUNTING`. |
-| `providers` | `array<string>` | No | Optional list of allowed fiat providers. |
+| `providers` | `array of strings` | No | Optional list of allowed fiat providers. |
 | `isCrypto` | `boolean` | No | Optional filter for crypto-related payment methods. |
 | `countryGroup` | `string` | No | Optional country group filter. |
 
@@ -362,7 +357,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `id` | `string` | Yes | Payment token used later as `paymentToken`. |
+| `id` | `string` | Yes | Payment method token. Pass this value as `paymentToken` in fiat deposit/withdrawal or fiat-provider quote requests. |
 | `number` | `string` | No | Masked payment method number shown to client. |
 | `brand` | `string` | No | Payment method brand, for example `VISA`. |
 | `providerId` | `string` | Yes | Provider identifier. |
@@ -372,7 +367,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `isCrypto` | `boolean` | Yes | Shows whether method is crypto-related. |
 | `country` | `string` | No | Payment method country. |
 | `currency` | `string` | No | Primary fiat currency. |
-| `supportedCurrencies` | `array<string>` | No | Fiat currencies supported by this payment method. |
+| `supportedCurrencies` | `array of strings` | No | Fiat currencies supported by this payment method. |
 
 #### Errors
 
@@ -419,20 +414,19 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client who deposits fiat to wallet. |
-| `accountType` | `string` | Yes | Target account type. For custodial wallet use `WALLET`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier for whom the fiat wallet deposit is created. |
+| `accountType` | `string` | Yes | Determines which internal balance account is affected. For custodial wallet operations use `WALLET`. |
 | `fiatProviderType` | `string` | Yes | Fiat provider used for payment processing, for example `ASSIST`. |
-| `paymentToken` | `string` | Conditional | Saved payment method token. Required if `internalToken` is not used. |
-| `internalToken` | `string` | Conditional | Internal payment token. Required if `paymentToken` is not used. |
+| `paymentToken` | `string` | Conditional | Token of the client saved payment method. Use it to route fiat payment/payout through a selected card or payment instrument. Required if `internalToken` is not used. |
+| `internalToken` | `string` | Conditional | Internal token alternative used when the payment instrument is represented by internal provider data instead of `paymentToken`. Required if `paymentToken` is not used. |
 | `asset.code` | `string` | Yes | Fiat currency to deposit. |
-| `asset.amount` | `number` | Yes | Deposit amount. |
+| `asset.amount` | `number` | Yes | Fiat amount the client should deposit to the wallet. |
 
 #### Response
 
@@ -443,7 +437,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `expirationMinutes` | `number` | No | Payment link lifetime in minutes. |
 | `paymentDetails` | `object` | No | Provider-specific payment data. |
 | `paymentDetails.paymentLink` | `string` | No | Provider payment URL. |
-| `paymentDetails.notificationPhoneNumber` | `string \| null` | No | Phone number used for provider notifications when available. |
+| `paymentDetails.notificationPhoneNumber` | `string/null` | No | Phone number returned by provider when the payment scenario requires notification or additional confirmation. |
 
 #### Errors
 
@@ -490,14 +484,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client who withdraws crypto from wallet. |
+| `clientId` | `string` | Yes | WhiteBird client identifier whose wallet balance will be used for crypto withdrawal. |
 | `asset.amount` | `number` | Yes | Amount to withdraw before commission. |
 | `asset.code` | `string` | Yes | Crypto asset code. |
 | `asset.network` | `string` | Yes | Blockchain network. |
@@ -549,15 +542,14 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client who creates withdrawal. |
-| `accountType` | `string` | Yes | Source account type. For custodial wallet use `WALLET`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier for whom the withdrawal operation is created. |
+| `accountType` | `string` | Yes | Determines from which internal balance account funds are debited. For custodial wallet use `WALLET`. |
 | `calculationId` | `string` | Yes | Calculation id returned by withdrawal calculation endpoint. |
 | `comment` | `string` | No | Optional memo/comment/tag for networks that require additional destination data. |
 
@@ -565,7 +557,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `transactionId` | `string` | Yes | Created crypto withdrawal transaction id. |
+| `transactionId` | `string` | Yes | Created crypto withdrawal transaction identifier used for tracking status and support. |
 
 #### Errors
 
@@ -610,29 +602,28 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client who withdraws fiat. |
+| `clientId` | `string` | Yes | WhiteBird client identifier whose wallet fiat balance will be used for payout calculation. |
 | `fiatProviderType` | `string` | Yes | Fiat provider used for payout. |
 | `paymentToken` | `string` | Conditional | Payment method token for fiat withdrawal. |
 | `internalToken` | `string` | Conditional | Internal token alternative. |
 | `asset.code` | `string` | Yes | Fiat currency. |
-| `asset.amount` | `number` | Yes | Fiat withdrawal amount. |
+| `asset.amount` | `number` | Yes | Fiat amount requested from the client wallet before provider fees are applied. |
 
 #### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `id` | `string \| null` | No | Calculation id when provider requires it. Can be `null` for direct calculation flows. |
+| `id` | `string/null` | No | Calculation identifier when provider creates a reusable calculation. Can be `null` when the fiat calculation is direct and no follow-up calculation id is required. |
 | `withdrawalAmount` | `string` | Yes | Amount requested for withdrawal. |
 | `commissionAmount` | `string` | Yes | Fiat withdrawal commission. |
 | `receivedAmount` | `string` | Yes | Amount expected after commission. |
-| `expirationDate` | `string \| null` | No | Calculation expiration date when applicable. |
+| `expirationDate` | `string/null` | No | Date/time until which the calculated fees and amounts are valid. `null` means the provider did not return an expiration time. |
 
 #### Errors
 
@@ -674,18 +665,17 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client who creates fiat withdrawal. |
-| `accountType` | `string` | Yes | Source account type. For custodial wallet use `WALLET`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier for whom the fiat withdrawal operation is created. |
+| `accountType` | `string` | Yes | Determines from which internal balance account funds are debited. For custodial wallet use `WALLET`. |
 | `fiatProviderType` | `string` | Yes | Fiat provider used for payout. |
-| `paymentToken` | `string` | Conditional | Saved payment method token. Required if `internalToken` is not used. |
-| `internalToken` | `string` | Conditional | Internal payment token. Required if `paymentToken` is not used. |
+| `paymentToken` | `string` | Conditional | Token of the client saved payment method. Use it to route fiat payment/payout through a selected card or payment instrument. Required if `internalToken` is not used. |
+| `internalToken` | `string` | Conditional | Internal token alternative used when the payment instrument is represented by internal provider data instead of `paymentToken`. Required if `paymentToken` is not used. |
 | `asset.code` | `string` | Yes | Fiat currency. |
 | `asset.amount` | `number` | Yes | Withdrawal amount. |
 
@@ -693,7 +683,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `transactionId` | `string` | Yes | Created fiat withdrawal transaction id. |
+| `transactionId` | `string` | Yes | Created fiat withdrawal transaction identifier used for tracking payout status and reconciliation. |
 
 #### Errors
 
@@ -764,14 +754,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client for whom quote is created. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to calculate quote limits, fees, and eligibility for this client. |
 | `input.type` | `string` | Yes | Source operation type. For buy use `FIAT_PROVIDER`. |
 | `input.asset` | `string` | Yes | Source fiat asset. |
 | `input.amount` | `number` | Conditional | Source amount. At least one of `input.amount` or `output.amount` is required. |
@@ -886,14 +875,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote id returned by quote creation endpoint. |
+| `quoteId` | `string` | Yes | Quote identifier returned by quote creation. It fixes the calculated amounts/rates and must be used before quote expiration. |
 
 #### Response
 
@@ -904,11 +892,11 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `conditions` | `object` | No | Full order calculation details. |
 | `clientId` | `string` | Yes | Client id for this order. |
 | `status` | `string` | Yes | Order status, for example `PROCESSING`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string \| null` | No | Error reason when order fails. |
+| `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
 | `input` | `object` | Yes | Source operation details. |
 | `output` | `object` | Yes | Destination operation details. |
-| `input.link` | `string \| null` | No | Fiat provider payment link when payment requires redirect/link. |
-| `processorTransactionId` | `string \| null` | No | Provider transaction id when available. |
+| `input.link` | `string/null` | No | Fiat provider payment URL that should be opened by the client when the payment flow requires redirect/link confirmation. |
+| `processorTransactionId` | `string/null` | No | External provider transaction identifier used to reconcile WhiteBird operation with fiat provider processing. |
 
 #### Errors
 
@@ -979,14 +967,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client for whom sell quote is created. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to calculate sell quote, fees, and wallet-balance eligibility. |
 | `input.type` | `string` | Yes | Source operation type. For custodial wallet sell use `INTERNAL_BALANCE`. |
 | `input.asset` | `string` | Yes | Crypto asset being sold. |
 | `input.amount` | `number` | Conditional | Source amount. At least one of `input.amount` or `output.amount` is required. |
@@ -1097,14 +1084,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote id returned by sell quote creation. |
+| `quoteId` | `string` | Yes | Sell quote identifier returned by quote creation. It fixes the calculated sell amounts/rates and must be used before expiration. |
 
 #### Response
 
@@ -1115,12 +1101,12 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `conditions` | `object` | No | Full quote/order calculation details. |
 | `clientId` | `string` | Yes | Client id for this order. |
 | `status` | `string` | Yes | Current order status. |
-| `failureMessage` | `string \| null` | No | Failure reason when order fails. |
+| `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
 | `input` | `object` | Yes | Source crypto/internal balance operation. |
 | `output` | `object` | Yes | Destination fiat provider operation. |
 | `output.provider` | `string` | No | Fiat provider used for payout. |
 | `output.processingBank` | `string` | No | Processing bank selected by fiat provider route. |
-| `processorTransactionId` | `string \| null` | No | Provider transaction id when available. |
+| `processorTransactionId` | `string/null` | No | External provider transaction identifier used to reconcile WhiteBird operation with fiat provider processing. |
 
 #### Errors
 
@@ -1220,8 +1206,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
@@ -1230,10 +1215,10 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 | `page` | `number` | No | Query parameter with page index. Default example uses `0`. |
 | `size` | `number` | No | Query parameter with page size. Default example uses `20`. |
 | `sort` | `string` | No | Query parameter for sorting, for example `creationDate,desc`. |
-| `clientIds` | `array<string>` | No | Filter by one or more client ids. |
-| `operationTypes` | `array<string>` | No | Filter by operation type: `FIAT_PROVIDER`, `CRYPTO_TRANSFER`, `INTERNAL_BALANCE`. |
-| `statuses` | `array<string>` | No | Filter by order status: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `assets` | `array<string>` | No | Filter by assets. |
+| `clientIds` | `array of strings` | No | Filter by one or more client ids. |
+| `operationTypes` | `array of strings` | No | Filter by operation type: `FIAT_PROVIDER`, `CRYPTO_TRANSFER`, `INTERNAL_BALANCE`. |
+| `statuses` | `array of strings` | No | Filter by order status: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `assets` | `array of strings` | No | Filter by assets. |
 | `completionDateFrame.start` | `string` | No | Completion date range start. |
 | `completionDateFrame.end` | `string` | No | Completion date range end. |
 | `creationDateFrame.start` | `string` | No | Creation date range start. |
@@ -1243,13 +1228,13 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `content` | `array<object>` | Yes | Page content with order objects. |
+| `content` | `array of objects` | Yes | Page content with order objects. |
 | `content[].id` | `string` | Yes | Order id. |
 | `content[].number` | `number` | Yes | Human-readable order number. |
 | `content[].conditions` | `object` | No | Full order calculation details. |
 | `content[].clientId` | `string` | Yes | Client id. |
 | `content[].status` | `string` | Yes | Current order status. |
-| `content[].failureMessage` | `string \| null` | No | Failure reason when order failed. |
+| `content[].failureMessage` | `string/null` | No | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
 | `content[].input` | `object` | Yes | Source operation details. |
 | `content[].output` | `object` | Yes | Destination operation details. |
 | `totalElements` | `number` | Yes | Total number of matching orders. |
@@ -1304,14 +1289,13 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client for whom limits are checked. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to apply client-specific limits before quote creation. |
 | `fromAsset` | `string` | Yes | Source asset. |
 | `fromPaymentDetails.type` | `string` | Yes | Source payment type. For conversion use `INTERNAL_BALANCE`. |
 | `toAsset` | `string` | Yes | Destination asset. |
@@ -1387,14 +1371,13 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | Client for whom quote is created. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to calculate quote limits, fees, and eligibility for this client. |
 | `input.type` | `string` | Yes | Source type. For conversion use `INTERNAL_BALANCE`. |
 | `input.asset` | `string` | Yes | Source asset. |
 | `input.amount` | `number` | Conditional | Source amount. At least one side amount is required. |
@@ -1494,14 +1477,13 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key. |
-| `Content-Type` | `string` | Yes | Must be `application/json`. |
+| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 #### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote id returned by conversion quote endpoint. |
+| `quoteId` | `string` | Yes | Conversion quote identifier returned by quote creation. It fixes the conversion rate and amounts until expiration. |
 
 #### Response
 
@@ -1512,7 +1494,7 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 | `conditions` | `object` | No | Full conversion calculation details. |
 | `clientId` | `string` | Yes | Client id. |
 | `status` | `string` | Yes | Conversion order status. Usually `COMPLETED` when internal swap succeeds. |
-| `failureMessage` | `string \| null` | No | Failure reason when conversion fails. |
+| `failureMessage` | `string/null` | No | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
 | `input` | `object` | Yes | Source internal balance operation. |
 | `output` | `object` | Yes | Destination internal balance operation. |
 | `input.status` / `output.status` | `string` | Yes | Status of each operation leg. |
