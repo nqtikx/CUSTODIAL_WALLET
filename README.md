@@ -9,10 +9,6 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 Base data endpoints are used before any wallet operation. They help the merchant show available assets, current operations, and account balances to the client.
 
-### Step 0.1 Get Available Assets
-
-Use this endpoint to get the list of fiat and crypto assets available for custodial wallet flows.
-
 ### Step 0.1 Get available assets
 
 Use this endpoint to retrieve all fiat and crypto assets available for custodial wallet operations. Use the response to build asset selectors and validate supported routes before any operation.
