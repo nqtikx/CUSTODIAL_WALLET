@@ -3,8 +3,6 @@
 The custodial wallet is used for operations with the client internal balance: deposit, withdrawal, buy, sell, and asset conversion.  
 In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Conversion`), and for backend integration only merchant endpoints are described below.  
 
----
-
 > BASE_URL https://api.dev.wbdevel.net/
 
 ## 0) Wallet base data
