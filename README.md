@@ -30,8 +30,39 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 }
 ```
 
-**Headers**
+#### Headers
 
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | No | No JSON body is sent. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `destination` | `string` | No | Query parameter that filters assets for a specific flow. For custodial wallet use `SDK_ACCOUNTING`. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `fiatAssets` | `array<object>` | Yes | Fiat currencies available for the merchant flow. |
+| `fiatAssets[].id` | `string` | Yes | Internal fiat asset identifier. |
+| `fiatAssets[].code` | `string` | Yes | Display currency code. |
+| `cryptoAssets` | `array<object>` | Yes | Crypto assets available for the merchant flow. |
+| `cryptoAssets[].id` | `string` | Yes | Internal crypto asset identifier, including network-specific asset id when applicable. |
+| `cryptoAssets[].code` | `string` | Yes | Display crypto currency code. |
+| `cryptoAssets[].network` | `string` | No | Blockchain network used for the asset. |
+| `cryptoAssets[].protocol` | `string` | No | Token standard or protocol, for example `TRC-20`. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing or invalid. |
+| `403 Forbidden` | HTTP error | No | Merchant does not have access to this endpoint. |
+| `400 Bad Request` | HTTP error | No | Invalid or unsupported query parameter value. |
 
 ### Step 0.2 Get current balance operations
 **GET** `/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
@@ -74,6 +105,48 @@ Required request params:
   ]
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | No | No JSON body is sent. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client identifier whose active balance operations must be returned. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `fiatOperations` | `array<object>` | Yes | Current fiat wallet operations. |
+| `cryptoOperations` | `array<object>` | Yes | Current crypto wallet operations. |
+| `number` | `number` | Yes | Human-readable operation number. |
+| `accountType` | `string` | Yes | Balance account type. For custodial wallet use `WALLET`. |
+| `operationType` | `string` | Yes | Operation direction/type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| `amount` | `number` | Yes | Operation amount in the asset currency. |
+| `transactionId` | `string` | Yes | Internal fiat or crypto transaction id. |
+| `asset` | `string` | Yes | Asset used by the operation. |
+| `status` | `string` | Yes | Current processing status of the operation. |
+| `fiatProvider` | `string` | No | Fiat provider used by fiat operation. |
+| `orderIdentity` | `string` | No | Provider/order reference. |
+| `submitTimeout` | `string` | No | Crypto deposit timeout mode. |
+| `depositCryptoAddress` | `string` | No | Address where the user must send crypto for deposit. |
+| `network` | `string` | No | Blockchain network. |
+| `txHash` | `string \| null` | No | Blockchain transaction hash when known. |
+| `createdAt` | `string` | Yes | Operation creation date/time. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing or invalid. |
+| `403 Forbidden` | HTTP error | No | Merchant does not have access to the client or endpoint. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client id is invalid or client is not linked to the merchant. |
 
 ### Step 0.3 Get enhanced merchant account balances
 **GET** `/api/v2/accounting/merchant/account/enhanced`
@@ -128,7 +201,42 @@ Required request params:
 }
 ```
 
----
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | No | No JSON body is sent. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| Body | `object` | No | No request body is required. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `balances` | `array<object>` | Yes | List of merchant account balances. |
+| `balances[].currency` | `string` | Yes | Currency or asset code. |
+| `balances[].type` | `string` | Yes | Balance type, for example `USER_BALANCE`. |
+| `balances[].amount` | `number` | Yes | Available balance amount. |
+| `balances[].usdRate` | `number` | No | Current USD conversion rate used for display/summary. |
+| `balances[].usdAmount` | `number` | No | Balance value converted to USD. |
+| `balances[].creationDate` | `number` | No | Balance creation timestamp in milliseconds. |
+| `balances[].modificationDate` | `number` | No | Last update timestamp in milliseconds. |
+| `balances[].fiat` | `boolean` | Yes | `true` for fiat currency, `false` for crypto asset. |
+| `totalFiatUsdAmount` | `number` | Yes | Total fiat balances converted to USD. |
+| `totalCryptoUsdAmount` | `number` | Yes | Total crypto balances converted to USD. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `401 Unauthorized` | HTTP error | Yes | `x-api-key` is missing or invalid. |
+| `403 Forbidden` | HTTP error | No | Merchant is not allowed to access account balances. |
+| `500 Internal Server Error` | HTTP error | No | Accounting service or balance provider error. |
 
 ## 1) Deposit (`deposit`)
 
@@ -162,6 +270,39 @@ Required body fields:
   "depositCryptoAddress": "TCT2pKJXo233hrKWQMeCptC8My1KGvtsU4"
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client who creates the wallet deposit. |
+| `accountType` | `string` | Yes | Target account type. For custodial wallet use `WALLET`. |
+| `asset.code` | `string` | Yes | Asset to deposit, for example `USDT_TRC`. |
+| `asset.network` | `string` | Yes | Blockchain network used for deposit address generation. |
+| `asset.amount` | `number` | Yes | Expected deposit amount. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `transactionId` | `string` | Yes | Crypto transaction id created in WhiteBird. Use it for tracking. |
+| `depositCryptoAddress` | `string` | Yes | Blockchain address where the client sends crypto funds. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_ASSET` | Business error | No | Asset code/network is missing or unsupported. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client status does not allow wallet deposit. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client is not found or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ### Step 1.2 Get fiat payment methods
 **POST** `/api/v2/exchange/merchant/payment/method`
@@ -206,6 +347,49 @@ Optional filters:
 ]
 ```
 
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client whose payment methods must be returned. |
+| `fiatAsset` | `string` | No | Fiat currency filter, for example `BYN`. |
+| `orderType` | `string` | No | Operation type filter, for example `BUY` for fiat input. |
+| `destination` | `string` | No | Flow filter. For custodial wallet use `SDK_ACCOUNTING`. |
+| `providers` | `array<string>` | No | Optional list of allowed fiat providers. |
+| `isCrypto` | `boolean` | No | Optional filter for crypto-related payment methods. |
+| `countryGroup` | `string` | No | Optional country group filter. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Payment token used later as `paymentToken`. |
+| `number` | `string` | No | Masked payment method number shown to client. |
+| `brand` | `string` | No | Payment method brand, for example `VISA`. |
+| `providerId` | `string` | Yes | Provider identifier. |
+| `providerType` | `string` | Yes | Provider type, for example `ASSIST`. |
+| `status` | `string` | Yes | Payment method status. Use enabled methods only. |
+| `isRestricted` | `boolean` | Yes | Shows whether this payment method is restricted. |
+| `isCrypto` | `boolean` | Yes | Shows whether method is crypto-related. |
+| `country` | `string` | No | Payment method country. |
+| `currency` | `string` | No | Primary fiat currency. |
+| `supportedCurrencies` | `array<string>` | No | Fiat currencies supported by this payment method. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 CLIENT_NOT_FOUND` | Business error | No | Client is not found or not linked to merchant. |
+| `400 INVALID_PAYMENT_PROVIDER` | Business error | No | Provider filter is unsupported. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+
 ### Step 1.3 Create fiat deposit
 **POST** `/api/v2/exchange/merchant/balance/fiat/deposit`
 
@@ -244,7 +428,44 @@ Required body fields:
 }
 ```
 
----
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client who deposits fiat to wallet. |
+| `accountType` | `string` | Yes | Target account type. For custodial wallet use `WALLET`. |
+| `fiatProviderType` | `string` | Yes | Fiat provider used for payment processing, for example `ASSIST`. |
+| `paymentToken` | `string` | Conditional | Saved payment method token. Required if `internalToken` is not used. |
+| `internalToken` | `string` | Conditional | Internal payment token. Required if `paymentToken` is not used. |
+| `asset.code` | `string` | Yes | Fiat currency to deposit. |
+| `asset.amount` | `number` | Yes | Deposit amount. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `fiatPaymentLink` | `string` | No | Payment URL that client should open to complete fiat deposit. |
+| `creationDate` | `string` | Yes | Deposit creation date/time. |
+| `expirationMinutes` | `number` | No | Payment link lifetime in minutes. |
+| `paymentDetails` | `object` | No | Provider-specific payment data. |
+| `paymentDetails.paymentLink` | `string` | No | Provider payment URL. |
+| `paymentDetails.notificationPhoneNumber` | `string \| null` | No | Phone number used for provider notifications when available. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | `paymentToken`/`internalToken` is missing, invalid, or unavailable. |
+| `400 INVALID_FIAT_PROVIDER` | Business error | No | Provider is unsupported for this currency or flow. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform fiat deposit. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ## 2) Send (`withdrawal`)
 
@@ -282,6 +503,42 @@ Required body fields:
 }
 ```
 
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client who withdraws crypto from wallet. |
+| `asset.amount` | `number` | Yes | Amount to withdraw before commission. |
+| `asset.code` | `string` | Yes | Crypto asset code. |
+| `asset.network` | `string` | Yes | Blockchain network. |
+| `toAddress` | `string` | Yes | Destination crypto address. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Calculation id used to create withdrawal. |
+| `withdrawalAmount` | `string` | Yes | Original withdrawal amount. |
+| `commissionAmount` | `string` | Yes | Network/service commission amount. |
+| `receivedAmount` | `string` | Yes | Amount expected to be received after commission. |
+| `expirationDate` | `string` | No | Date/time when this calculation expires. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_ADDRESS` | Business error | No | Destination address is invalid for the selected network. |
+| `400 INVALID_AMOUNT` | Business error | No | Amount is below/above allowed limits or insufficient. |
+| `400 INVALID_ASSET` | Business error | No | Asset or network is unsupported. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+
 ### Step 2.2 Create crypto withdrawal
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal`
 
@@ -306,6 +563,37 @@ Required body fields:
   "transactionId": "crypto-withdrawal-transaction-id"
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client who creates withdrawal. |
+| `accountType` | `string` | Yes | Source account type. For custodial wallet use `WALLET`. |
+| `calculationId` | `string` | Yes | Calculation id returned by withdrawal calculation endpoint. |
+| `comment` | `string` | No | Optional memo/comment/tag for networks that require additional destination data. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `transactionId` | `string` | Yes | Created crypto withdrawal transaction id. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 CALCULATION_NOT_FOUND` | Business error | No | Calculation id is missing, expired, or not found. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform withdrawal. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Wallet balance is not enough for withdrawal. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ### Step 2.3 Calculate fiat withdrawal
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
@@ -340,6 +628,43 @@ Required body fields:
 }
 ```
 
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client who withdraws fiat. |
+| `fiatProviderType` | `string` | Yes | Fiat provider used for payout. |
+| `paymentToken` | `string` | Conditional | Payment method token for fiat withdrawal. |
+| `internalToken` | `string` | Conditional | Internal token alternative. |
+| `asset.code` | `string` | Yes | Fiat currency. |
+| `asset.amount` | `number` | Yes | Fiat withdrawal amount. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string \| null` | No | Calculation id when provider requires it. Can be `null` for direct calculation flows. |
+| `withdrawalAmount` | `string` | Yes | Amount requested for withdrawal. |
+| `commissionAmount` | `string` | Yes | Fiat withdrawal commission. |
+| `receivedAmount` | `string` | Yes | Amount expected after commission. |
+| `expirationDate` | `string \| null` | No | Calculation expiration date when applicable. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is missing or unavailable. |
+| `400 INVALID_AMOUNT` | Business error | No | Amount is invalid or outside limits. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Wallet fiat balance is not enough. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+
 ### Step 2.4 Create fiat withdrawal
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal`
 
@@ -372,7 +697,39 @@ Required body fields:
 }
 ```
 
----
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client who creates fiat withdrawal. |
+| `accountType` | `string` | Yes | Source account type. For custodial wallet use `WALLET`. |
+| `fiatProviderType` | `string` | Yes | Fiat provider used for payout. |
+| `paymentToken` | `string` | Conditional | Saved payment method token. Required if `internalToken` is not used. |
+| `internalToken` | `string` | Conditional | Internal payment token. Required if `paymentToken` is not used. |
+| `asset.code` | `string` | Yes | Fiat currency. |
+| `asset.amount` | `number` | Yes | Withdrawal amount. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `transactionId` | `string` | Yes | Created fiat withdrawal transaction id. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is missing, invalid, or restricted. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Wallet balance is not enough for withdrawal. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform fiat withdrawal. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ## 3) Buy (`buy`) — merchant V3 flow
 
@@ -433,6 +790,54 @@ Required body fields:
     }
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client for whom quote is created. |
+| `input.type` | `string` | Yes | Source operation type. For buy use `FIAT_PROVIDER`. |
+| `input.asset` | `string` | Yes | Source fiat asset. |
+| `input.amount` | `number` | Conditional | Source amount. At least one of `input.amount` or `output.amount` is required. |
+| `input.provider` | `string` | Yes | Fiat provider used for payment. |
+| `input.token` | `string` | Conditional | Payment token used for provider payment. |
+| `output.type` | `string` | Yes | Destination operation type. For custodial wallet use `INTERNAL_BALANCE`. |
+| `output.asset` | `string` | Yes | Crypto asset that will be credited to internal balance. |
+| `output.amount` | `number` | Conditional | Target amount. At least one of `input.amount` or `output.amount` is required. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Quote id used to create order. |
+| `rate` | `string` | Yes | Currency pair displayed for the quote. |
+| `systemRateValue` | `string` | Yes | Base system rate before merchant/customer fee effects. |
+| `exchangeRateValue` | `string` | Yes | Exchange rate applied to the quote. |
+| `actualRateValue` | `string` | Yes | Actual resulting rate for displayed amounts. |
+| `clientId` | `string` | Yes | Client id for the quote. |
+| `creationDate` | `string` | Yes | Quote creation date/time. |
+| `expirationDate` | `string` | Yes | Quote expiration date/time. |
+| `input` | `object` | Yes | Calculated source payment details. |
+| `output` | `object` | Yes | Calculated destination payment details. |
+| `input.feeAmount` / `output.feeAmount` | `string` | Yes | Fee amount for each side of the operation. |
+| `input.paymentType` | `string` | No | Fiat payment type selected by provider configuration. |
+| `input.processingBank` | `string` | No | Processing bank selected for fiat provider route. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_QUOTE` | Business error | No | Quote request cannot be calculated with provided assets, amount, or payment details. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot create quote for this operation. |
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Payment token is invalid or restricted. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ### Step 3.2 Create buy order
 **POST** `/api/v3/exchange/merchant/order`
@@ -506,7 +911,42 @@ Required body fields:
 }
 ```
 
----
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `quoteId` | `string` | Yes | Quote id returned by quote creation endpoint. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Order id. |
+| `number` | `number` | Yes | Human-readable order number. |
+| `conditions` | `object` | No | Full order calculation details. |
+| `clientId` | `string` | Yes | Client id for this order. |
+| `status` | `string` | Yes | Order status, for example `PROCESSING`, `COMPLETED`, `FAILED`. |
+| `failureMessage` | `string \| null` | No | Error reason when order fails. |
+| `input` | `object` | Yes | Source operation details. |
+| `output` | `object` | Yes | Destination operation details. |
+| `input.link` | `string \| null` | No | Fiat provider payment link when payment requires redirect/link. |
+| `processorTransactionId` | `string \| null` | No | Provider transaction id when available. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or not found. |
+| `400 INVALID_QUOTE` | Business error | No | Quote cannot be used to create order. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client is not allowed to create order. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ## 4) Sell (`sell`) — merchant V3 flow
 
@@ -574,6 +1014,50 @@ Required body fields:
     }
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client for whom sell quote is created. |
+| `input.type` | `string` | Yes | Source operation type. For custodial wallet sell use `INTERNAL_BALANCE`. |
+| `input.asset` | `string` | Yes | Crypto asset being sold. |
+| `input.amount` | `number` | Conditional | Source amount. At least one of `input.amount` or `output.amount` is required. |
+| `output.type` | `string` | Yes | Destination operation type. For fiat payout use `FIAT_PROVIDER`. |
+| `output.asset` | `string` | Yes | Fiat asset to receive. |
+| `output.provider` | `string` | Yes | Fiat provider. |
+| `output.token` | `string` | Conditional | Payment token for receiving fiat. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Quote id used for order creation. |
+| `rate` | `string` | Yes | Currency pair. |
+| `clientId` | `string` | Yes | Client id for the quote. |
+| `expirationDate` | `string` | Yes | Quote expiration date/time. |
+| `input` | `object` | Yes | Calculated source operation details. |
+| `output` | `object` | Yes | Calculated destination operation details. |
+| `output.amount` | `string` | Yes | Fiat amount expected before/after fee according to response details. |
+| `output.feeAmount` | `string` | Yes | Fiat provider/exchange fee amount. |
+| `output.paymentType` | `string` | No | Fiat payment type. |
+| `output.processingBank` | `string` | No | Processing bank selected by provider route. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_QUOTE` | Business error | No | Quote cannot be calculated. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Client wallet balance is not enough. |
+| `400 INVALID_PAYMENT_TOKEN` | Business error | No | Fiat payment token is invalid or restricted. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ### Step 4.2 Create sell order
 **POST** `/api/v3/exchange/merchant/order`
@@ -647,7 +1131,43 @@ Required body fields:
 }
 ```
 
----
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `quoteId` | `string` | Yes | Quote id returned by sell quote creation. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Order id. |
+| `number` | `number` | Yes | Human-readable order number. |
+| `conditions` | `object` | No | Full quote/order calculation details. |
+| `clientId` | `string` | Yes | Client id for this order. |
+| `status` | `string` | Yes | Current order status. |
+| `failureMessage` | `string \| null` | No | Failure reason when order fails. |
+| `input` | `object` | Yes | Source crypto/internal balance operation. |
+| `output` | `object` | Yes | Destination fiat provider operation. |
+| `output.provider` | `string` | No | Fiat provider used for payout. |
+| `output.processingBank` | `string` | No | Processing bank selected by fiat provider route. |
+| `processorTransactionId` | `string \| null` | No | Provider transaction id when available. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or not found. |
+| `400 INVALID_QUOTE` | Business error | No | Quote cannot be used for order creation. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Internal balance is not enough. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ## 5) Operation history/details
 
@@ -742,11 +1262,58 @@ Required body fields:
 }
 ```
 
----
+#### Headers
 
-## 6) Conversion (`conversion`) — merchant V3 flow
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
 
-For custodial wallet, conversion goes through internal balance (`USER_BALANCE` / `INTERNAL_BALANCE`) and standard V3 quote/order flow.
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `page` | `number` | No | Query parameter with page index. Default example uses `0`. |
+| `size` | `number` | No | Query parameter with page size. Default example uses `20`. |
+| `sort` | `string` | No | Query parameter for sorting, for example `creationDate,desc`. |
+| `clientIds` | `array<string>` | No | Filter by one or more client ids. |
+| `operationTypes` | `array<string>` | No | Filter by operation type: `FIAT_PROVIDER`, `CRYPTO_TRANSFER`, `INTERNAL_BALANCE`. |
+| `statuses` | `array<string>` | No | Filter by order status: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `assets` | `array<string>` | No | Filter by assets. |
+| `completionDateFrame.start` | `string` | No | Completion date range start. |
+| `completionDateFrame.end` | `string` | No | Completion date range end. |
+| `creationDateFrame.start` | `string` | No | Creation date range start. |
+| `creationDateFrame.end` | `string` | No | Creation date range end. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `content` | `array<object>` | Yes | Page content with order objects. |
+| `content[].id` | `string` | Yes | Order id. |
+| `content[].number` | `number` | Yes | Human-readable order number. |
+| `content[].conditions` | `object` | No | Full order calculation details. |
+| `content[].clientId` | `string` | Yes | Client id. |
+| `content[].status` | `string` | Yes | Current order status. |
+| `content[].failureMessage` | `string \| null` | No | Failure reason when order failed. |
+| `content[].input` | `object` | Yes | Source operation details. |
+| `content[].output` | `object` | Yes | Destination operation details. |
+| `totalElements` | `number` | Yes | Total number of matching orders. |
+| `totalPages` | `number` | Yes | Total number of pages. |
+| `number` | `number` | Yes | Current page number. |
+| `size` | `number` | Yes | Current page size. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_FILTER` | Business error | No | Filter value, date range, or pagination parameter is invalid. |
+| `400 CLIENT_NOT_FOUND` | Business error | No | One of provided clients is not found or not linked to merchant. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
+
+## 6) Conversion (`conversion`)
+
+For custodial wallet, conversion goes through internal balance (`USER_BALANCE` / `INTERNAL_BALANCE`).
 
 
 ### Step 6.1 Check limits
@@ -776,6 +1343,41 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
     "toMaxAmount": "1182894.74"
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client for whom limits are checked. |
+| `fromAsset` | `string` | Yes | Source asset. |
+| `fromPaymentDetails.type` | `string` | Yes | Source payment type. For conversion use `INTERNAL_BALANCE`. |
+| `toAsset` | `string` | Yes | Destination asset. |
+| `toPaymentDetails.type` | `string` | Yes | Destination payment type. For conversion use `INTERNAL_BALANCE`. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `fromMinAmount` | `string` | Yes | Minimum allowed source amount. |
+| `fromMaxAmount` | `string` | Yes | Maximum allowed source amount. |
+| `toMinAmount` | `string` | Yes | Minimum allowed destination amount. |
+| `toMaxAmount` | `string` | Yes | Maximum allowed destination amount. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 LIMIT_NOT_FOUND` | Business error | No | Limit configuration is missing for selected route. |
+| `400 INVALID_CURRENCY_PAIR` | Business error | No | Asset pair is unsupported. |
+| `400 INVALID_CLIENT_STATUS` | Business error | No | Client cannot perform conversion. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ### Step 6.2 Create quote
 **POST** `/api/v3/exchange/merchant/quote`
@@ -835,6 +1437,49 @@ Required body fields:
     }
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `clientId` | `string` | Yes | Client for whom quote is created. |
+| `input.type` | `string` | Yes | Source type. For conversion use `INTERNAL_BALANCE`. |
+| `input.asset` | `string` | Yes | Source asset. |
+| `input.amount` | `number` | Conditional | Source amount. At least one side amount is required. |
+| `output.type` | `string` | Yes | Destination type. For conversion use `INTERNAL_BALANCE`. |
+| `output.asset` | `string` | Yes | Destination asset. |
+| `output.amount` | `number` | Conditional | Destination amount. At least one side amount is required. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Quote id used for conversion order. |
+| `rate` | `string` | Yes | Conversion pair. |
+| `systemRateValue` | `string` | Yes | Base system rate. |
+| `exchangeRateValue` | `string` | Yes | Exchange rate applied to quote. |
+| `actualRateValue` | `string` | Yes | Actual resulting rate. |
+| `clientId` | `string` | Yes | Client id. |
+| `expirationDate` | `string` | Yes | Quote expiration date/time. |
+| `input` | `object` | Yes | Calculated source details. |
+| `output` | `object` | Yes | Calculated destination details. |
+| `feeAmount` | `string` | Yes | Fee amount on source/destination side. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 INVALID_QUOTE` | Business error | No | Quote cannot be calculated. |
+| `400 AMOUNT_OUT_OF_LIMIT` | Business error | No | Amount is outside allowed min/max. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Internal balance is not enough. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
 ### Step 6.3 Create swap operation
 **POST** `/api/v3/exchange/merchant/order`
@@ -896,4 +1541,40 @@ Required body fields:
     }
 }
 ```
+
+#### Headers
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `x-api-key` | `string` | Yes | Merchant API key. |
+| `Content-Type` | `string` | Yes | Must be `application/json`. |
+
+#### Request
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `quoteId` | `string` | Yes | Quote id returned by conversion quote endpoint. |
+
+#### Response
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `id` | `string` | Yes | Conversion order id. |
+| `number` | `number` | Yes | Human-readable order number. |
+| `conditions` | `object` | No | Full conversion calculation details. |
+| `clientId` | `string` | Yes | Client id. |
+| `status` | `string` | Yes | Conversion order status. Usually `COMPLETED` when internal swap succeeds. |
+| `failureMessage` | `string \| null` | No | Failure reason when conversion fails. |
+| `input` | `object` | Yes | Source internal balance operation. |
+| `output` | `object` | Yes | Destination internal balance operation. |
+| `input.status` / `output.status` | `string` | Yes | Status of each operation leg. |
+
+#### Errors
+
+| Name | Type | Required | Description |
+|---|---|---:|---|
+| `400 QUOTE_NOT_FOUND` | Business error | No | Quote id is missing, expired, or not found. |
+| `400 INVALID_QUOTE` | Business error | No | Quote cannot be used for conversion. |
+| `400 INSUFFICIENT_BALANCE` | Business error | No | Source internal balance is not enough. |
+| `401 Unauthorized` | HTTP error | Yes | Invalid or missing `x-api-key`. |
 
