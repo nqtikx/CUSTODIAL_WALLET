@@ -10,7 +10,8 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 ### Step 0.1 Get available assets
 **POST** `/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
 
-**Headers** `x-api-key`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Response**
 ```json
@@ -67,8 +68,8 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 ### Step 0.2 Get current balance operations
 **GET** `/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
 
-Required request params:
-- `clientId`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Response**
 ```json
@@ -150,6 +151,9 @@ Required request params:
 
 ### Step 0.3 Get enhanced merchant account balances
 **GET** `/api/v2/accounting/merchant/account/enhanced`
+
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Response**
 ```json
@@ -243,12 +247,8 @@ Required request params:
 ### Step 1.1 Create crypto deposit
 **POST** `/api/v2/exchange/merchant/balance/crypto/deposit`
 
-Required body fields:
-- `clientId`
-- `accountType`
-- `asset.code`
-- `asset.network`
-- `asset.amount`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -307,16 +307,8 @@ Required body fields:
 ### Step 1.2 Get fiat payment methods
 **POST** `/api/v2/exchange/merchant/payment/method`
 
-Required body fields:
-- `clientId`
-
-Optional filters:
-- `fiatAsset`
-- `orderType`
-- `destination`
-- `providers`
-- `isCrypto`
-- `countryGroup`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -393,13 +385,8 @@ Optional filters:
 ### Step 1.3 Create fiat deposit
 **POST** `/api/v2/exchange/merchant/balance/fiat/deposit`
 
-Required body fields:
-- `clientId`
-- `accountType`
-- `fiatProviderType`
-- `asset.code`
-- `asset.amount`
-- one of `paymentToken` or `internalToken`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -472,12 +459,8 @@ Required body fields:
 ### Step 2.1 Calculate crypto withdrawal
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal/calculate`
 
-Required body fields:
-- `clientId`
-- `asset.code`
-- `asset.network`
-- `asset.amount`
-- `toAddress`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -542,10 +525,8 @@ Required body fields:
 ### Step 2.2 Create crypto withdrawal
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal`
 
-Required body fields:
-- `clientId`
-- `calculationId`
-- `accountType`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -598,11 +579,8 @@ Required body fields:
 ### Step 2.3 Calculate fiat withdrawal
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
 
-Required body fields:
-- `clientId`
-- `fiatProviderType`
-- `asset.code`
-- `asset.amount`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -668,13 +646,8 @@ Required body fields:
 ### Step 2.4 Create fiat withdrawal
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal`
 
-Required body fields:
-- `clientId`
-- `accountType`
-- `fiatProviderType`
-- `asset.code`
-- `asset.amount`
-- one of `paymentToken` or `internalToken`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -736,12 +709,8 @@ Required body fields:
 ### Step 3.1 Create quote
 **POST** `/api/v3/exchange/merchant/quote`
 
-Required body fields:
-- `input.type`
-- `input.asset`
-- `output.type`
-- `output.asset`
-- at least one amount: `input.amount` or `output.amount`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -842,12 +811,14 @@ Required body fields:
 ### Step 3.2 Create buy order
 **POST** `/api/v3/exchange/merchant/order`
 
+### Headers
+- `x-api-key: {{x-api-key}}`
+
 **Request**
 ```json
 {
     "quoteId":"47b2985a-2fe3-427c-9a18-6b16736c460e"
 }
-
 // exchange operation is processed immediately
 ```
 
@@ -953,36 +924,25 @@ Required body fields:
 ### Step 4.1 Create quote
 **POST** `/api/v3/exchange/merchant/quote`
 
-Required body fields:
-- `input.type`
-- `input.asset`
-- `output.type`
-- `output.asset`
-- at least one amount: `input.amount` or `output.amount`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
 {
     "clientId": "{{clientId}}",
     "input":{
-        "type":"INTERNAL_BALANCE",  // operation type: INTERNAL_BALANCE / FIAT_PROVIDER / CRYPTO_TRANSFER
-        "asset":"TRX",              // asset: BYN RUB EUR USD BTC ETH USDT_ERC USDC_USDC TRX USDT_TRC TON USDT_TON
-        "amount":100                  // amount
+        "type":"INTERNAL_BALANCE",
+        "asset":"TRX",
+        "amount":100
     },
     "output":{
         "type":"FIAT_PROVIDER",
         "asset":"BYN",
-        "provider": "ASSIST",                                // provider
-        "token": "{{payment_token}}"      // payment token id
+        "provider": "ASSIST",
+        "token": "{{payment_token}}"
     }
 }
-
-// amount can be provided in input or output
-// systemRateValue   - rate without fee
-// exchangeRateValue - rate with fee
-// actualRateValue   - currently not used in UI logic
-// feeAmount         - fee amount
-// expirationDate    - quote lifetime
 ```
 
 **Response**
@@ -1062,12 +1022,14 @@ Required body fields:
 ### Step 4.2 Create sell order
 **POST** `/api/v3/exchange/merchant/order`
 
+### Headers
+- `x-api-key: {{x-api-key}}`
+
 **Request**
 ```json
 {
     "quoteId":"a95bf590-c029-47b2-bf95-adbcf50a11bb"
 }
-
 // exchange operation is processed immediately
 ```
 
@@ -1174,6 +1136,9 @@ Required body fields:
 ### Step 5.1 Get order history/details
 **POST** `/api/v3/exchange/merchant/order/history?page=0&size=20&sort=creationDate,desc`
 
+### Headers
+- `x-api-key: {{x-api-key}}`
+
 **Request**
 ```json
 {
@@ -1181,17 +1146,6 @@ Required body fields:
         "{{clientId}}"
     ]
 }
-// "operationTypes": [], // FIAT_PROVIDER / CRYPTO_TRANSFER / INTERNAL_BALANCE
-// "statuses": [],       // PROCESSING / EXPIRED / COMPLETED / FAILED
-// "assets": [],         // assets: BYN RUB EUR USD BTC ETH USDT_ERC USDC_USDC TRX USDT_TRC TON USDT_TON
-// "completionDateFrame":{    // completion date range
-//     "start":"2024-08-25T00:00:00+0300",
-//     "end":"2026-09-02T00:00:00+0300"
-// },
-// "creationDateFrame":{      // creation date range
-//     "start":"2024-08-25T00:00:00+0300",
-//     "end":"2026-09-02T00:00:00+0300"
-// }
 ```
 
 **Response**
@@ -1315,9 +1269,11 @@ Required body fields:
 
 For custodial wallet, conversion goes through internal balance (`USER_BALANCE` / `INTERNAL_BALANCE`).
 
-
 ### Step 6.1 Check limits
 **POST** `/api/v3/exchange/merchant/limit`
+
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
@@ -1382,34 +1338,23 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 ### Step 6.2 Create quote
 **POST** `/api/v3/exchange/merchant/quote`
 
-Required body fields:
-- `input.type`
-- `input.asset`
-- `output.type`
-- `output.asset`
-- at least one amount: `input.amount` or `output.amount`
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
 {
     "clientId": "{{clientId}}",
     "input":{
-        "type":"INTERNAL_BALANCE",  // operation type: INTERNAL_BALANCE / FIAT_PROVIDER / CRYPTO_TRANSFER
-        "asset":"USDT_TRC",              // asset: BYN RUB EUR USD BTC ETH USDT_ERC USDC_USDC TRX USDT_TRC TON USDT_TON
-        "amount":5                  // amount
+        "type":"INTERNAL_BALANCE",
+        "asset":"USDT_TRC",
+        "amount":5
     },
     "output":{
         "type":"INTERNAL_BALANCE",
         "asset":"TRX"
     }
 }
-
-// amount can be provided in input or output
-// systemRateValue   - rate without fee
-// exchangeRateValue - rate with fee
-// actualRateValue   - currently not used in UI logic
-// feeAmount         - fee amount
-// expirationDate    - quote lifetime
 ```
 
 **Response**
@@ -1483,6 +1428,9 @@ Required body fields:
 
 ### Step 6.3 Create swap operation
 **POST** `/api/v3/exchange/merchant/order`
+
+### Headers
+- `x-api-key: {{x-api-key}}`
 
 **Request**
 ```json
