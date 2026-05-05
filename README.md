@@ -3,12 +3,12 @@
 The custodial wallet is used for operations with the client internal balance: deposit, withdrawal, buy, sell, and asset conversion.  
 In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Conversion`), and for backend integration only merchant endpoints are described below.  
 
-> BASE_URL https://api.dev.wbdevel.net/
+> BASE_URL https://api.dev.wbdevel.net
 
 ## 0) Wallet base data
 
 ### Step 0.1 Get available assets
-**POST** `{{URL}}/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
+**POST** `/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
 
 **Headers** `x-api-key`
 
@@ -34,7 +34,7 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 
 ### Step 0.2 Get current balance operations
-**GET** `{{URL}}/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
+**GET** `/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
 
 Required request params:
 - `clientId`
@@ -76,7 +76,7 @@ Required request params:
 ```
 
 ### Step 0.3 Get enhanced merchant account balances
-**GET** `{{URL}}/api/v2/accounting/merchant/account/enhanced`
+**GET** `/api/v2/accounting/merchant/account/enhanced`
 
 **Response**
 ```json
@@ -133,7 +133,7 @@ Required request params:
 ## 1) Deposit (`deposit`)
 
 ### Step 1.1 Create crypto deposit
-**POST** `{{URL}}/api/v2/exchange/merchant/balance/crypto/deposit`
+**POST** `/api/v2/exchange/merchant/balance/crypto/deposit`
 
 Required body fields:
 - `clientId`
@@ -164,7 +164,7 @@ Required body fields:
 ```
 
 ### Step 1.2 Get fiat payment methods
-**POST** `{{URL}}/api/v2/exchange/merchant/payment/method`
+**POST** `/api/v2/exchange/merchant/payment/method`
 
 Required body fields:
 - `clientId`
@@ -207,7 +207,7 @@ Optional filters:
 ```
 
 ### Step 1.3 Create fiat deposit
-**POST** `{{URL}}/api/v2/exchange/merchant/balance/fiat/deposit`
+**POST** `/api/v2/exchange/merchant/balance/fiat/deposit`
 
 Required body fields:
 - `clientId`
@@ -249,7 +249,7 @@ Required body fields:
 ## 2) Send (`withdrawal`)
 
 ### Step 2.1 Calculate crypto withdrawal
-**POST** `{{URL}}/api/v2/exchange/merchant/balance/crypto/withdrawal/calculate`
+**POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal/calculate`
 
 Required body fields:
 - `clientId`
@@ -283,7 +283,7 @@ Required body fields:
 ```
 
 ### Step 2.2 Create crypto withdrawal
-**POST** `{{URL}}/api/v2/exchange/merchant/balance/crypto/withdrawal`
+**POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal`
 
 Required body fields:
 - `clientId`
@@ -308,7 +308,7 @@ Required body fields:
 ```
 
 ### Step 2.3 Calculate fiat withdrawal
-**POST** `{{URL}}/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
+**POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
 
 Required body fields:
 - `clientId`
@@ -341,7 +341,7 @@ Required body fields:
 ```
 
 ### Step 2.4 Create fiat withdrawal
-**POST** `{{URL}}/api/v2/exchange/merchant/balance/fiat/withdrawal`
+**POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal`
 
 Required body fields:
 - `clientId`
@@ -377,7 +377,7 @@ Required body fields:
 ## 3) Buy (`buy`) — merchant V3 flow
 
 ### Step 3.1 Create quote
-**POST** `{{URL}}/api/v3/exchange/merchant/quote`
+**POST** `/api/v3/exchange/merchant/quote`
 
 Required body fields:
 - `input.type`
@@ -435,7 +435,7 @@ Required body fields:
 ```
 
 ### Step 3.2 Create buy order
-**POST** `{{URL}}/api/v3/exchange/merchant/order`
+**POST** `/api/v3/exchange/merchant/order`
 
 **Request**
 ```json
@@ -511,7 +511,7 @@ Required body fields:
 ## 4) Sell (`sell`) — merchant V3 flow
 
 ### Step 4.1 Create quote
-**POST** `{{URL}}/api/v3/exchange/merchant/quote`
+**POST** `/api/v3/exchange/merchant/quote`
 
 Required body fields:
 - `input.type`
@@ -576,7 +576,7 @@ Required body fields:
 ```
 
 ### Step 4.2 Create sell order
-**POST** `{{URL}}/api/v3/exchange/merchant/order`
+**POST** `/api/v3/exchange/merchant/order`
 
 **Request**
 ```json
@@ -652,7 +652,7 @@ Required body fields:
 ## 5) Operation history/details
 
 ### Step 5.1 Get order history/details
-**POST** `{{URL}}/api/v3/exchange/merchant/order/history?page=0&size=20&sort=creationDate,desc`
+**POST** `/api/v3/exchange/merchant/order/history?page=0&size=20&sort=creationDate,desc`
 
 **Request**
 ```json
@@ -750,7 +750,7 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 
 
 ### Step 6.1 Check limits
-**POST** `{{URL}}/api/v3/exchange/merchant/limit`
+**POST** `/api/v3/exchange/merchant/limit`
 
 **Request**
 ```json
@@ -778,7 +778,7 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 ```
 
 ### Step 6.2 Create quote
-**POST** `{{URL}}/api/v3/exchange/merchant/quote`
+**POST** `/api/v3/exchange/merchant/quote`
 
 Required body fields:
 - `input.type`
@@ -837,7 +837,7 @@ Required body fields:
 ```
 
 ### Step 6.3 Create swap operation
-**POST** `{{URL}}/api/v3/exchange/merchant/order`
+**POST** `/api/v3/exchange/merchant/order`
 
 **Request**
 ```json
