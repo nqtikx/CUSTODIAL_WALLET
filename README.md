@@ -155,13 +155,20 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 | `403 Forbidden` | HTTP error | No | Merchant has no permission for this client or endpoint. |
 
 
-### Step 0.3 Get enhanced merchant account balances
+### Step 0.3 Get enhanced client account balances
 
-Use this endpoint to get enhanced merchant account balances grouped by currency type. Use the response to populate balance widgets and reconciliation summaries.
-**GET** `/api/v2/accounting/merchant/account/enhanced`
+Use this endpoint to get enhanced client account balances grouped by currency type. Use the response to populate balance widgets and reconciliation summaries.
+**POST** `/api/v2/accounting/client/account/enhanced`
 
 ### Headers
-- `x-api-key: {{x-api-key}}`
+- `Authorization: Bearer {{accessToken}}`
+
+**Request**
+```json
+{
+  "clientId": "{{cleintId}}"
+}
+```
 
 **Response**
 ```json
@@ -217,19 +224,20 @@ Use this endpoint to get enhanced merchant account balances grouped by currency 
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| `Authorization` | `string` | Yes | Bearer access token used to authenticate the client user context. Format: `Bearer <accessToken>`. |
 
 ### Request
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| Body | `object` | No | No request body is required. |
+| Body | `object` | Yes | `AccountFilterRequest` payload used to resolve the target client balance scope. |
+| `clientId` | `string` | No | Optional client identifier. If omitted, backend resolves client by authenticated user context. |
 
 ### Response
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `balances` | `array of objects` | Yes | List of merchant account balances. |
+| `balances` | `array of objects` | Yes | List of client account balances. |
 | `balances[].currency` | `string` | Yes | Currency or asset code. |
 | `balances[].type` | `string` | Yes | Balance type, for example `USER_BALANCE`. |
 | `balances[].amount` | `number` | Yes | Available balance amount. |
@@ -247,7 +255,7 @@ Use this endpoint to get enhanced merchant account balances grouped by currency 
 |---|---|---:|---|
 | `400 Bad Request` | HTTP error | No | Request is malformed or unsupported by accounting endpoint. |
 | `401 Unauthorized` | HTTP error | Yes | Authorization header is missing or invalid. |
-| `403 Forbidden` | HTTP error | No | Merchant has no permission to read enhanced balances. |
+| `403 Forbidden` | HTTP error | No | Authenticated user does not have required `USER` authority. |
 | `500 Internal Server Error` | HTTP error | No | Unexpected accounting/balance aggregation failure. |
 
 
@@ -264,7 +272,7 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 **Request**
 ```json
 {
-  "clientId": "b62c5c11-3f1d-4e54-95f5-4f19f2fd4e48",
+  "clientId": "{{cleintId}}",
   "accountType": "WALLET",
   "asset": {
     "code": "USDT_TRC",
@@ -327,7 +335,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 **Request**
 ```json
 {
-  "clientId": "b62c5c11-3f1d-4e54-95f5-4f19f2fd4e48",
+  "clientId": "{{cleintId}}",
   "fiatAsset": "BYN",
   "orderType": "BUY",
   "destination": "SDK_ACCOUNTING"
@@ -410,7 +418,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 **Request**
 ```json
 {
-  "clientId": "b62c5c11-3f1d-4e54-95f5-4f19f2fd4e48",
+  "clientId": "{{cleintId}}",
   "accountType": "WALLET",
   "fiatProviderType": "ASSIST",
   "paymentToken": "payment-token",
@@ -487,7 +495,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "asset":{
         "amount":10,
         "code":"TRX",
@@ -556,7 +564,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "accountType":"WALLET",
     "calculationId":"ea40bbbf-16a2-4fa2-aada-f55121c45eac",
     "comment":""  // MEMO/comment/TAG field, used as destination memo for networks like TON
@@ -613,7 +621,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 **Request**
 ```json
 {
-  "clientId": "{{clientId}}",
+  "clientId": "{{cleintId}}",
   "fiatProviderType": "ASSIST",
   "paymentToken": "{{payment_token}}",
   "asset": {
@@ -683,7 +691,7 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "accountType": "WALLET",
     "fiatProviderType": "ASSIST",
     "paymentToken": "{{payment_token}}",
@@ -749,7 +757,7 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "input":{
         "type":"FIAT_PROVIDER",  // operation type: INTERNAL_BALANCE / FIAT_PROVIDER / CRYPTO_TRANSFER
         "asset":"BYN",              // asset: BYN RUB EUR USD BTC ETH USDT_ERC USDC_USDC TRX USDT_TRC TON USDT_TON
@@ -772,7 +780,7 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
     "systemRateValue": "0.9768",
     "exchangeRateValue": "0.9768",
     "actualRateValue": "1.0469",
-    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "clientId": "{{cleintId}}",
     "creationDate": "2026-04-30T11:28:17+0000",
     "expirationDate": "2026-04-30T11:28:47+0000",
     "input": {
@@ -881,7 +889,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
         "actualRateValue": "1.0469"
     },
     "recalculationReason": null,
-    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "clientId": "{{cleintId}}",
     "status": "PROCESSING",
     "failureMessage": null,
     "completionDate": null,
@@ -971,7 +979,7 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "input":{
         "type":"INTERNAL_BALANCE",
         "asset":"TRX",
@@ -994,7 +1002,7 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
     "systemRateValue": "0.9765",
     "exchangeRateValue": "0.9765",
     "actualRateValue": "0.9208",
-    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "clientId": "{{cleintId}}",
     "creationDate": "2026-04-30T11:38:25+0000",
     "expirationDate": "2026-04-30T11:38:55+0000",
     "input": {
@@ -1098,7 +1106,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
         "actualRateValue": "0.9208"
     },
     "recalculationReason": null,
-    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "clientId": "{{cleintId}}",
     "status": "PROCESSING",
     "failureMessage": null,
     "completionDate": null,
@@ -1218,7 +1226,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
         "actualRateValue": "0.9208"
       },
       "recalculationReason": null,
-      "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+      "clientId": "{{cleintId}}",
       "status": "PROCESSING",
       "failureMessage": null,
       "completionDate": null,
@@ -1329,7 +1337,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "fromAsset": "USDT_TRC",
     "fromPaymentDetails": {
         "type": "INTERNAL_BALANCE"
@@ -1398,7 +1406,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 **Request**
 ```json
 {
-    "clientId": "{{clientId}}",
+    "clientId": "{{cleintId}}",
     "input":{
         "type":"INTERNAL_BALANCE",
         "asset":"USDT_TRC",
@@ -1419,7 +1427,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
     "systemRateValue": "0.3255",
     "exchangeRateValue": "0.3255",
     "actualRateValue": "0.3305",
-    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "clientId": "{{cleintId}}",
     "creationDate": "2026-04-30T11:05:37+0000",
     "expirationDate": "2026-04-30T11:06:07+0000",
     "input": {
@@ -1518,7 +1526,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
         "actualRateValue": "0.3308"
     },
     "recalculationReason": null,
-    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "clientId": "{{cleintId}}",
     "status": "COMPLETED",
     "failureMessage": null,
     "completionDate": "2026-04-30T13:10:38+0000",
