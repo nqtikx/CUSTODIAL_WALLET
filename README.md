@@ -793,37 +793,61 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 
 ```json
 {
-    "id": "d938165d-2158-4f4e-8bf1-9ef6c5806fdc",
-    "number": 721000004148,
+    "id": "3afe0970-fd7a-44b8-8822-949658b4d9c0",
+    "number": 771000004292,
     "conditions": {
         "fromAsset": "BYN",
         "toAsset": "TRX",
         "fromGrossAmount": "50",
         "fromNetAmount": "46.65",
         "fromFeeAmount": "3.35",
-        "toGrossAmount": "47.757985",
-        "toNetAmount": "47.757985",
+        "toGrossAmount": "45.229785",
+        "toNetAmount": "45.229785",
         "toFeeAmount": "0",
         "promoCode": null,
         "rate": "TRX/BYN",
-        "systemRateValue": "0.9768",
-        "exchangeRateValue": "0.9768",
-        "actualRateValue": "1.0469"
+        "systemRateValue": "1.0314",
+        "exchangeRateValue": "1.0314",
+        "actualRateValue": "1.1055"
     },
     "recalculationReason": null,
-    "clientId": "{{clientId}}",
+    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
     "status": "PROCESSING",
-    "provider": "ASSIST",
-    "paymentType": "P2P",
-    "processingBank": "BELARUSBANK",
-    "link": "https://payments.t.paysecure.ru/pay/p2p/..."
-  },
-  "output": {
-    "type": "INTERNAL_BALANCE",
-    "asset": "TRX",
-    "amount": "47.757985",
-    "status": "NEW"
-  }
+    "failureMessage": null,
+    "completionDate": null,
+    "creationDate": "2026-05-05T17:03:38+0000",
+    "sessionId": null,
+    "input": {
+        "type": "FIAT_PROVIDER",
+        "asset": "BYN",
+        "amount": "50",
+        "transactionAmount": "50",
+        "feeAmount": "3.35",
+        "status": "PROCESSING",
+        "failureMessage": null,
+        "expirationDate": null,
+        "provider": "ASSIST",
+        "paymentType": "P2P",
+        "processingBank": "BELARUSBANK",
+        "clientBank": null,
+        "fromToken": "fc4b130e-c3bf-4a3d-abe5-9ec5900c9868",
+        "toToken": "50d53e2e-f086-472a-9ce2-cdcee43279cb",
+        "link": "https://payments.t.paysecure.ru/pay/p2p/...",
+        "processorTransactionId": "7a672d4f09794d3ea754f4cd6d01c796",
+        "post": null,
+        "paymentSystem": null,
+        "processorTransactionNumber": null
+    },
+    "output": {
+        "type": "INTERNAL_BALANCE",
+        "asset": "TRX",
+        "amount": "45.229785",
+        "transactionAmount": "45.229785",
+        "feeAmount": "0",
+        "status": "NEW",
+        "failureMessage": null,
+        "expirationDate": null
+    }
 }
 ```
 
