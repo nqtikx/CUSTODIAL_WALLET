@@ -5,27 +5,6 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 > BASE_URL https://api.dev.wbdevel.net
 
-## Common Request Headers
-
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Merchant API key used to authenticate server-to-server requests. |
-| `Content-Type` | `string` | Conditional | Use `application/json` for requests with JSON body. Not required for GET requests without body. |
-
-## Common Error Shape
-
-Most errors are returned as JSON object with a business status/code and human-readable message.
-
-```json
-{
-  "message": "error message",
-  "code": 400,
-  "status": "ERROR_CODE"
-}
-```
-
----
-
 ## 0) Wallet Base Data
 
 Base data endpoints are used before any wallet operation. They help the merchant show available assets, current operations, and account balances to the client.
