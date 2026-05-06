@@ -85,36 +85,36 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 
 ```json
 {
-  "fiatOperations": [
-    {
-      "number": 9210086,
-      "accountType": "WALLET",
-      "operationType": "DEPOSIT",
-      "amount": 100,
-      "transactionId": "fiat-transaction-id",
-      "asset": "BYN",
-      "status": "PROCESSING",
-      "fiatProvider": "ASSIST",
-      "orderIdentity": "order-id",
-      "createdAt": "2026-04-30T10:00:00"
-    }
-  ],
-  "cryptoOperations": [
-    {
-      "number": 9210087,
-      "accountType": "WALLET",
-      "operationType": "DEPOSIT",
-      "submitTimeout": "DEFAULT",
-      "transactionId": "crypto-transaction-id",
-      "status": "PENDING",
-      "depositCryptoAddress": "TCT2pKJXo233hrKWQMeCptC8My1KGvtsU4",
-      "amount": 100,
-      "asset": "USDT_TRC",
-      "network": "Tron",
-      "txHash": null,
-      "createdAt": "2026-04-30T10:00:00"
-    }
-  ]
+    "fiatOperations": [
+        {
+            "number": 4039,
+            "accountType": "WALLET",
+            "operationType": "DEPOSIT",
+            "amount": "100",
+            "transactionId": "d5525adb-9bf7-401f-ad23-92ca2ef43dcf",
+            "asset": "BYN",
+            "status": "PENDING",
+            "fiatProvider": "ASSIST",
+            "orderIdentity": "33c890ab73d54e37bcae1cb8f3c0daef",
+            "createdAt": "2026-05-06T07:22:20+0000"
+        }
+    ],
+    "cryptoOperations": [
+        {
+            "number": 4038,
+            "accountType": "WALLET",
+            "operationType": "DEPOSIT",
+            "submitTimeout": "ADDITIONAL",
+            "transactionId": "92662469-7c10-4ae4-a776-0e16a4481aca",
+            "status": "NEW",
+            "depositCryptoAddress": "TQMCCuCs3C2tQr894CntWobDQymep5K2Xk",
+            "amount": "50",
+            "asset": "TRX",
+            "network": null,
+            "txHash": null,
+            "createdAt": "2026-05-06T07:21:47+0000"
+        }
+    ]
 }
 ```
 
@@ -183,22 +183,22 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 
 ```json
 {
-  "clientId": "{{clientId}}",
-  "accountType": "WALLET",
-  "asset": {
-    "code": "USDT_TRC",
-    "network": "Tron",
-    "amount": 100
-  }
-}
+    "clientId": "{{clientId}}",
+    "accountType":"WALLET",
+    "asset":{
+        "code":"TRX",
+        "network":"Tron",
+        "amount":50
+    }
+} 
 ```
 
 **Response**
 
 ```json
 {
-  "transactionId": "e9b08950-ed34-4e78-88ca-5e74b22a125c",
-  "depositCryptoAddress": "TCT2pKJXo233hrKWQMeCptC8My1KGvtsU4"
+    "transactionId": "99922b6c-72e8-48a3-9886-a5191e88e96f",
+    "depositCryptoAddress": "TQMCCuCs3C2tQr894CntWobDQymep5K2Xk"
 }
 ```
 
@@ -261,18 +261,16 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 ```json
 [
   {
-    "id": "payment-token",
-    "number": "**** **** **** 1111",
-    "brand": "VISA",
-    "providerId": "ASSIST",
-    "providerType": "ASSIST",
-    "status": "ENABLED",
-    "isRestricted": false,
-    "isCrypto": false,
-    "country": "Belarus",
-    "currency": "BYN",
-    "supportedCurrencies": ["BYN"]
-  }
+        "id": "fc4b130e-c3bf-4a3d-abe5-9ec5900c9868",
+        "number": "**** **** **** 1111",
+        "brand": "VISA",
+        "providerId": "ASSIST",
+        "providerType": "ASSIST",
+        "status": "ENABLED",
+        "isRestricted": false,
+        "isCrypto": false,
+        "country": "Russia"
+    },
 ]
 ```
 
@@ -338,7 +336,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
   "clientId": "{{clientId}}",
   "accountType": "WALLET",
   "fiatProviderType": "ASSIST",
-  "paymentToken": "payment-token",
+  "paymentToken": "{{payment_token}}",
   "asset": {
     "code": "BYN",
     "amount": 100
@@ -417,7 +415,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 {
     "clientId": "{{clientId}}",
     "asset":{
-        "amount":10,
+        "amount":100,
         "code":"TRX",
         "network":"Tron"
     },
@@ -429,11 +427,11 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 
 ```json
 {
-  "id": "92db12c2-bf7a-402e-995b-3c43f1e4eb77",
-  "withdrawalAmount": "10",
-  "commissionAmount": "0.263",
-  "receivedAmount": "9.737",
-  "expirationDate": "2026-04-30T09:51:19+0000"
+    "id": "32b57e46-ee40-4e53-9144-4947648aedd6",
+    "withdrawalAmount": "100",
+    "commissionAmount": "0.263",
+    "receivedAmount": "99.737",
+    "expirationDate": "2026-05-06T07:44:41+0000"
 }
 ```
 
@@ -494,14 +492,6 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 }
 ```
 
-**Response**
-
-```json
-{
-  "transactionId": "crypto-withdrawal-transaction-id"
-}
-```
-
 ### Headers
 
 | Name | Type | Required | Description |
@@ -521,7 +511,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `transactionId` | `string` | Yes | Created crypto withdrawal transaction identifier used for tracking status and support. |
+| `transactionId` | `string` | No | Created crypto withdrawal transaction identifier used for tracking status and support. |
 
 ### Errors
 
@@ -674,7 +664,7 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 | `403 Forbidden` | HTTP | Operation is forbidden for this merchant (`AccessDeniedException`). |
 
 
-## 3) Buy (`buy`) - Merchant V3 Flow
+## 3) Buy (`buy`)
 
 Buy flow is used when the client pays fiat through a provider and receives crypto to internal wallet balance. The flow is quote first, then order creation.
 
@@ -710,14 +700,14 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 
 ```json
 {
-    "id": "3cf9f5b7-1013-4769-b396-9eb28e6b408d",
+    "id": "bfb363eb-673d-4233-aad0-29bd186454f0",
     "rate": "TRX/BYN",
-    "systemRateValue": "0.9768",
-    "exchangeRateValue": "0.9768",
-    "actualRateValue": "1.0469",
-    "clientId": "{{clientId}}",
-    "creationDate": "2026-04-30T11:28:17+0000",
-    "expirationDate": "2026-04-30T11:28:47+0000",
+    "systemRateValue": "1.0263",
+    "exchangeRateValue": "1.0263",
+    "actualRateValue": "1.1",
+    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "creationDate": "2026-05-06T08:17:13+0000",
+    "expirationDate": "2026-05-06T08:17:43+0000",
     "input": {
         "type": "FIAT_PROVIDER",
         "asset": "BYN",
@@ -731,7 +721,7 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
     "output": {
         "type": "INTERNAL_BALANCE",
         "asset": "TRX",
-        "amount": "47.757985",
+        "amount": "45.454545",
         "feeAmount": "0"
     }
 }
@@ -1447,14 +1437,14 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 
 ```json
 {
-    "id": "601b24b6-c7c3-4205-8396-79903f76f25e",
+    "id": "95294f34-c8b6-4811-ae06-1dc76dd2c7ad",
     "rate": "TRX/USDT_TRC",
-    "systemRateValue": "0.3255",
-    "exchangeRateValue": "0.3255",
-    "actualRateValue": "0.3305",
-    "clientId": "{{clientId}}",
-    "creationDate": "2026-04-30T11:05:37+0000",
-    "expirationDate": "2026-04-30T11:06:07+0000",
+    "systemRateValue": "0.3422",
+    "exchangeRateValue": "0.3422",
+    "actualRateValue": "0.3474",
+    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
+    "creationDate": "2026-05-06T08:22:27+0000",
+    "expirationDate": "2026-05-06T08:22:57+0000",
     "input": {
         "type": "INTERNAL_BALANCE",
         "asset": "USDT_TRC",
@@ -1464,8 +1454,8 @@ Use this endpoint to create a conversion quote between internal balance assets. 
     "output": {
         "type": "INTERNAL_BALANCE",
         "asset": "TRX",
-        "amount": "15.130568",
-        "feeAmount": "0.230415"
+        "amount": "14.392168",
+        "feeAmount": "0.21917"
     }
 }
 ```
@@ -1535,29 +1525,29 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 
 ```json
 {
-    "id": "08d5b13c-5a5b-470b-b244-6a6becb7888b",
-    "number": 821000004152,
+    "id": "85179db7-02fc-48cc-8694-af655d67755d",
+    "number": 161000004313,
     "conditions": {
         "fromAsset": "USDT_TRC",
         "toAsset": "TRX",
         "fromGrossAmount": "5",
         "fromNetAmount": "5",
         "fromFeeAmount": "0",
-        "toGrossAmount": "15.346839",
-        "toNetAmount": "15.116636",
-        "toFeeAmount": "0.230203",
+        "toGrossAmount": "14.611338",
+        "toNetAmount": "14.392168",
+        "toFeeAmount": "0.21917",
         "promoCode": null,
         "rate": "TRX/USDT_TRC",
-        "systemRateValue": "0.3258",
-        "exchangeRateValue": "0.3258",
-        "actualRateValue": "0.3308"
+        "systemRateValue": "0.3422",
+        "exchangeRateValue": "0.3422",
+        "actualRateValue": "0.3474"
     },
     "recalculationReason": null,
-    "clientId": "{{clientId}}",
+    "clientId": "3e1469fa-8d35-441c-87b1-a007aeba2562",
     "status": "COMPLETED",
     "failureMessage": null,
-    "completionDate": "2026-04-30T13:10:38+0000",
-    "creationDate": "2026-04-30T13:10:35+0000",
+    "completionDate": "2026-05-06T08:23:49+0000",
+    "creationDate": "2026-05-06T08:23:40+0000",
     "sessionId": null,
     "input": {
         "type": "INTERNAL_BALANCE",
@@ -1572,9 +1562,9 @@ Use this endpoint to create and execute a swap operation from a valid conversion
     "output": {
         "type": "INTERNAL_BALANCE",
         "asset": "TRX",
-        "amount": "15.116636",
-        "transactionAmount": "15.116636",
-        "feeAmount": "0.230203",
+        "amount": "14.392168",
+        "transactionAmount": "14.392168",
+        "feeAmount": "0.21917",
         "status": "COMPLETED",
         "failureMessage": null,
         "expirationDate": null
