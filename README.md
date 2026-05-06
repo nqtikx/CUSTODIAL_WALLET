@@ -12,6 +12,7 @@ Base data endpoints are used before any wallet operation. They help the merchant
 ### Step 0.1 Get available assets
 
 Use this endpoint to retrieve all fiat and crypto assets available for custodial wallet operations. Use the response to build asset selectors and validate supported routes before any operation.
+
 **POST** `/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
 
 ### Headers
@@ -74,6 +75,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 ### Step 0.2 Get current balance operations
 
 Use this endpoint to fetch the client's current fiat and crypto wallet operations and statuses. Use the response to show live operation state in UI and support dashboards.
+
 **GET** `/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
 
 ### Headers
@@ -163,6 +165,7 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 ### Step 1.1 Create crypto deposit
 
 Use this endpoint to create a crypto deposit operation and generate a destination address. Use the response to provide deposit instructions and track the operation by transaction id.
+
 **POST** `/api/v2/exchange/merchant/balance/crypto/deposit`
 
 ### Headers
@@ -228,6 +231,7 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 ### Step 1.2 Get fiat payment methods
 
 Use this endpoint to retrieve available fiat payment methods for the selected client and flow. Use the response to select a valid payment token for deposit or withdrawal requests.
+
 **POST** `/api/v2/exchange/merchant/payment/method`
 
 ### Headers
@@ -313,6 +317,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 ### Step 1.3 Create fiat deposit
 
 Use this endpoint to initiate a fiat deposit through a selected payment provider. Use the response to redirect the client to provider payment flow or render payment details.
+
 **POST** `/api/v2/exchange/merchant/balance/fiat/deposit`
 
 ### Headers
@@ -392,6 +397,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 ### Step 2.1 Calculate crypto withdrawal
 
 Use this endpoint to calculate crypto withdrawal fees and net payout before submission. Use the response to show final amounts and keep the calculation id for withdrawal creation.
+
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal/calculate`
 
 ### Headers
@@ -463,6 +469,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 ### Step 2.2 Create crypto withdrawal
 
 Use this endpoint to create a crypto withdrawal using a valid calculation context. Use the response to store transaction id and monitor withdrawal lifecycle.
+
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal`
 
 ### Headers
@@ -522,6 +529,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 ### Step 2.3 Calculate fiat withdrawal
 
 Use this endpoint to calculate fiat withdrawal commission and expected payout amount. Use the response to confirm final withdrawal values with the client.
+
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
 
 ### Headers
@@ -594,6 +602,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 ### Step 2.4 Create fiat withdrawal
 
 Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use the response to persist transaction id and track provider payout status.
+
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal`
 
 ### Headers
@@ -664,6 +673,7 @@ Buy flow is used when the client pays fiat through a provider and receives crypt
 ### Step 3.1 Create quote
 
 Use this endpoint to create a buy quote and lock rate/amounts for a short time. Use the response to display final buy terms and pass quote id to order creation.
+
 **POST** `/api/v3/exchange/merchant/quote`
 
 ### Headers
@@ -772,6 +782,7 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 ### Step 3.2 Create buy order
 
 Use this endpoint to create a buy order from a valid non-expired quote. Use the response to track order execution and render provider/payment metadata.
+
 **POST** `/api/v3/exchange/merchant/order`
 
 ### Headers
@@ -925,6 +936,7 @@ Sell flow is used when the client sells crypto from internal wallet balance and 
 ### Step 4.1 Create quote
 
 Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Use the response to show sell terms and pass quote id to order creation.
+
 **POST** `/api/v3/exchange/merchant/quote`
 
 ### Headers
@@ -1028,6 +1040,7 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 ### Step 4.2 Create sell order
 
 Use this endpoint to create a sell order from a valid non-expired quote. Use the response to track order progress and payout operation details.
+
 **POST** `/api/v3/exchange/merchant/order`
 
 ### Headers
@@ -1175,6 +1188,7 @@ History endpoint is used to fetch created orders and their operation details for
 ### Step 5.1 Get order history/details
 
 Use this endpoint to fetch paged order history with optional filters and detailed operation data. Use the response to power history UI, reporting, and support investigations.
+
 **POST** `/api/v3/exchange/merchant/order/history?page=0&size=20&sort=creationDate,desc`
 
 ### Headers
@@ -1326,6 +1340,7 @@ For custodial wallet, conversion goes through internal balance (`USER_BALANCE` /
 ### Step 6.1 Check limits
 
 Use this endpoint to check conversion min/max limits for the selected asset pair. Use the response to validate entered amounts before quote creation.
+
 **POST** `/api/v3/exchange/merchant/limit`
 
 ### Headers
@@ -1397,6 +1412,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 ### Step 6.2 Create quote
 
 Use this endpoint to create a conversion quote between internal balance assets. Use the response to show conversion terms and pass quote id to swap creation.
+
 **POST** `/api/v3/exchange/merchant/quote`
 
 ### Headers
@@ -1493,6 +1509,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 ### Step 6.3 Create swap operation
 
 Use this endpoint to create and execute a swap operation from a valid conversion quote. Use the response to persist order identifiers and final operation statuses.
+
 **POST** `/api/v3/exchange/merchant/order`
 
 ### Headers
