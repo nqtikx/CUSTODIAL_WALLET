@@ -51,16 +51,16 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `fiatAssets` | `array of objects` | Yes | List of fiat assets that can be shown to the client as available wallet currencies for this merchant flow. |
-| `fiatAssets[].id` | `string` | Yes | Internal asset identifier used in API requests and routing logic. |
-| `fiatAssets[].code` | `string` | Yes | Currency code that can be displayed to the client in UI. |
-| `cryptoAssets` | `array of objects` | Yes | List of crypto assets/networks that can be used in deposit, withdrawal, buy, sell, or conversion flows. |
-| `cryptoAssets[].id` | `string` | Yes | Internal crypto asset identifier used in API requests; may include network-specific suffixes such as `USDT_TRC`. |
-| `cryptoAssets[].code` | `string` | Yes | Asset ticker displayed to the client; can differ from `id` when asset is network-specific. |
-| `cryptoAssets[].network` | `string` | No | Blockchain network that must be used for deposits/withdrawals of this asset. |
-| `cryptoAssets[].protocol` | `string` | No | Token protocol shown to prevent sending funds through the wrong network. |
+| Name | Type | Description |
+|---|---|---|
+| `fiatAssets` | `array of objects` | List of fiat assets that can be shown to the client as available wallet currencies for this merchant flow. |
+| `fiatAssets[].id` | `string` | Internal asset identifier used in API requests and routing logic. |
+| `fiatAssets[].code` | `string` | Currency code that can be displayed to the client in UI. |
+| `cryptoAssets` | `array of objects` | List of crypto assets/networks that can be used in deposit, withdrawal, buy, sell, or conversion flows. |
+| `cryptoAssets[].id` | `string` | Internal crypto asset identifier used in API requests; may include network-specific suffixes such as `USDT_TRC`. |
+| `cryptoAssets[].code` | `string` | Asset ticker displayed to the client; can differ from `id` when asset is network-specific. |
+| `cryptoAssets[].network` | `string` | Blockchain network that must be used for deposits/withdrawals of this asset. |
+| `cryptoAssets[].protocol` | `string` | Token protocol shown to prevent sending funds through the wrong network. |
 
 ### Errors
 
@@ -132,32 +132,32 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `fiatOperations` | `array of objects` | Yes | Current fiat wallet operations. |
-| `cryptoOperations` | `array of objects` | Yes | Current crypto wallet operations. |
-| `fiatOperations[].number` | `number` | Yes | Human-readable fiat operation number. |
-| `fiatOperations[].accountType` | `string` | Yes | Fiat operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
-| `fiatOperations[].operationType` | `string` | Yes | Fiat operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
-| `fiatOperations[].amount` | `number` | Yes | Fiat operation amount in fiat asset currency. |
-| `fiatOperations[].transactionId` | `string` | Yes | Internal fiat transaction identifier. |
-| `fiatOperations[].asset` | `string` | Yes | Fiat asset code of the operation. |
-| `fiatOperations[].status` | `string` | Yes | Fiat transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `REJECTED`, `TIMEOUT`, `DECLINED`, `INVALID_AMOUNT`, `ERROR`, `AML_BLOCKED`, `PENDING`, `PROCESSING`, `APPROVED`. |
-| `fiatOperations[].fiatProvider` | `string` | No | Fiat provider used by the fiat operation. |
-| `fiatOperations[].orderIdentity` | `string` | No | Provider-side order reference used for support/reconciliation. |
-| `fiatOperations[].createdAt` | `string` | Yes | Fiat operation creation date/time. |
-| `cryptoOperations[].number` | `number` | Yes | Human-readable crypto operation number. |
-| `cryptoOperations[].accountType` | `string` | Yes | Crypto operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
-| `cryptoOperations[].operationType` | `string` | Yes | Crypto operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
-| `cryptoOperations[].amount` | `number` | Yes | Crypto operation amount in crypto asset units. |
-| `cryptoOperations[].transactionId` | `string` | Yes | Internal crypto transaction identifier. |
-| `cryptoOperations[].asset` | `string` | Yes | Crypto asset code of the operation. |
-| `cryptoOperations[].status` | `string` | Yes | Crypto transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `NOT_FOUND`, `REJECTED`, `TIMEOUT`, `INVALID_AMOUNT`, `ERROR`, `AML_ERROR`, `AML_BLOCKED`, `ARREST`, `SUBMITTING`, `SUBMITTED`, `PENDING`, `SELECTED`, `CONFIRMED`, `PENDING_RESOLVE`. |
-| `cryptoOperations[].submitTimeout` | `string` | No | Crypto deposit timeout policy/mode. |
-| `cryptoOperations[].depositCryptoAddress` | `string` | No | Blockchain address where client sends funds for crypto deposit. |
-| `cryptoOperations[].network` | `string` | No | Blockchain network of the crypto operation. |
-| `cryptoOperations[].txHash` | `string/null` | No | Blockchain transaction hash after transfer is detected. |
-| `cryptoOperations[].createdAt` | `string` | Yes | Crypto operation creation date/time. |
+| Name | Type | Description |
+|---|---|---|
+| `fiatOperations` | `array of objects` | Current fiat wallet operations. |
+| `cryptoOperations` | `array of objects` | Current crypto wallet operations. |
+| `fiatOperations[].number` | `number` | Human-readable fiat operation number. |
+| `fiatOperations[].accountType` | `string` | Fiat operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
+| `fiatOperations[].operationType` | `string` | Fiat operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| `fiatOperations[].amount` | `number` | Fiat operation amount in fiat asset currency. |
+| `fiatOperations[].transactionId` | `string` | Internal fiat transaction identifier. |
+| `fiatOperations[].asset` | `string` | Fiat asset code of the operation. |
+| `fiatOperations[].status` | `string` | Fiat transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `REJECTED`, `TIMEOUT`, `DECLINED`, `INVALID_AMOUNT`, `ERROR`, `AML_BLOCKED`, `PENDING`, `PROCESSING`, `APPROVED`. |
+| `fiatOperations[].fiatProvider` | `string` | Fiat provider used by the fiat operation. |
+| `fiatOperations[].orderIdentity` | `string` | Provider-side order reference used for support/reconciliation. |
+| `fiatOperations[].createdAt` | `string` | Fiat operation creation date/time. |
+| `cryptoOperations[].number` | `number` | Human-readable crypto operation number. |
+| `cryptoOperations[].accountType` | `string` | Crypto operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
+| `cryptoOperations[].operationType` | `string` | Crypto operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| `cryptoOperations[].amount` | `number` | Crypto operation amount in crypto asset units. |
+| `cryptoOperations[].transactionId` | `string` | Internal crypto transaction identifier. |
+| `cryptoOperations[].asset` | `string` | Crypto asset code of the operation. |
+| `cryptoOperations[].status` | `string` | Crypto transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `NOT_FOUND`, `REJECTED`, `TIMEOUT`, `INVALID_AMOUNT`, `ERROR`, `AML_ERROR`, `AML_BLOCKED`, `ARREST`, `SUBMITTING`, `SUBMITTED`, `PENDING`, `SELECTED`, `CONFIRMED`, `PENDING_RESOLVE`. |
+| `cryptoOperations[].submitTimeout` | `string` | Crypto deposit timeout policy/mode. |
+| `cryptoOperations[].depositCryptoAddress` | `string` | Blockchain address where client sends funds for crypto deposit. |
+| `cryptoOperations[].network` | `string` | Blockchain network of the crypto operation. |
+| `cryptoOperations[].txHash` | `string/null` | Blockchain transaction hash after transfer is detected. |
+| `cryptoOperations[].createdAt` | `string` | Crypto operation creation date/time. |
 
 ### Errors
 
@@ -220,10 +220,10 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `transactionId` | `string` | Yes | Transaction identifier for tracking operation status, support cases, and reconciliation. |
-| `depositCryptoAddress` | `string` | Yes | Blockchain address that must be shown to the client as the destination for crypto deposit. |
+| Name | Type | Description |
+|---|---|---|
+| `transactionId` | `string` | Transaction identifier for tracking operation status, support cases, and reconciliation. |
+| `depositCryptoAddress` | `string` | Blockchain address that must be shown to the client as the destination for crypto deposit. |
 
 ### Errors
 
@@ -294,19 +294,19 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Payment method token. Pass this value as `paymentToken` in fiat deposit/withdrawal or fiat-provider quote requests. |
-| `number` | `string` | No | Masked payment method number shown to client. |
-| `brand` | `string` | No | Payment method brand, for example `VISA`. |
-| `providerId` | `string` | Yes | Provider identifier. |
-| `providerType` | `string` | Yes | Provider type, for example `ASSIST`. |
-| `status` | `string` | Yes | Payment method status. Allowed values: `ENABLED`, `DIRECTION_DISABLED`, `CURRENCY_DISABLED`. |
-| `isRestricted` | `boolean` | Yes | Shows whether this payment method is restricted. |
-| `isCrypto` | `boolean` | Yes | Shows whether method is crypto-related. |
-| `country` | `string` | No | Payment method country. |
-| `currency` | `string` | No | Primary fiat currency. |
-| `supportedCurrencies` | `array of strings` | No | Fiat currencies supported by this payment method. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Payment method token. Pass this value as `paymentToken` in fiat deposit/withdrawal or fiat-provider quote requests. |
+| `number` | `string` | Masked payment method number shown to client. |
+| `brand` | `string` | Payment method brand, for example `VISA`. |
+| `providerId` | `string` | Provider identifier. |
+| `providerType` | `string` | Provider type, for example `ASSIST`. |
+| `status` | `string` | Payment method status. Allowed values: `ENABLED`, `DIRECTION_DISABLED`, `CURRENCY_DISABLED`. |
+| `isRestricted` | `boolean` | Shows whether this payment method is restricted. |
+| `isCrypto` | `boolean` | Shows whether method is crypto-related. |
+| `country` | `string` | Payment method country. |
+| `currency` | `string` | Primary fiat currency. |
+| `supportedCurrencies` | `array of strings` | Fiat currencies supported by this payment method. |
 
 ### Errors
 
@@ -378,14 +378,14 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `fiatPaymentLink` | `string` | No | Payment URL that client should open to complete fiat deposit. |
-| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
-| `expirationMinutes` | `number` | No | Payment link lifetime in minutes. |
-| `paymentDetails` | `object` | No | Provider-specific payment data. |
-| `paymentDetails.paymentLink` | `string` | No | Provider payment URL. |
-| `paymentDetails.notificationPhoneNumber` | `string/null` | No | Phone number returned by provider when the payment scenario requires notification or additional confirmation. |
+| Name | Type | Description |
+|---|---|---|
+| `fiatPaymentLink` | `string` | Payment URL that client should open to complete fiat deposit. |
+| `creationDate` | `string` | Creation timestamp in server date-time format. |
+| `expirationMinutes` | `number` | Payment link lifetime in minutes. |
+| `paymentDetails` | `object` | Provider-specific payment data. |
+| `paymentDetails.paymentLink` | `string` | Provider payment URL. |
+| `paymentDetails.notificationPhoneNumber` | `string/null` | Phone number returned by provider when the payment scenario requires notification or additional confirmation. |
 
 ### Errors
 
@@ -453,13 +453,13 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Calculation id used to create withdrawal. |
-| `withdrawalAmount` | `string` | Yes | Original withdrawal amount. |
-| `commissionAmount` | `string` | Yes | Commission amount for the operation. |
-| `receivedAmount` | `string` | Yes | Net amount expected after fees/commissions. |
-| `expirationDate` | `string` | No | Expiration timestamp in server date-time format, if returned. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Calculation id used to create withdrawal. |
+| `withdrawalAmount` | `string` | Original withdrawal amount. |
+| `commissionAmount` | `string` | Commission amount for the operation. |
+| `receivedAmount` | `string` | Net amount expected after fees/commissions. |
+| `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
 
 ### Errors
 
@@ -509,9 +509,9 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `transactionId` | `string` | No | Created crypto withdrawal transaction identifier used for tracking status and support. |
+| Name | Type | Description |
+|---|---|---|
+| `transactionId` | `string` | Created crypto withdrawal transaction identifier used for tracking status and support. |
 
 ### Errors
 
@@ -578,13 +578,13 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string/null` | No | Calculation identifier when provider creates a reusable calculation. Can be `null` when the fiat calculation is direct and no follow-up calculation id is required. |
-| `withdrawalAmount` | `string` | Yes | Amount requested for withdrawal. |
-| `commissionAmount` | `string` | Yes | Commission amount for the operation. |
-| `receivedAmount` | `string` | Yes | Net amount expected after fees/commissions. |
-| `expirationDate` | `string/null` | No | Expiration timestamp in server date-time format, if returned. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string/null` | Calculation identifier when provider creates a reusable calculation. Can be `null` when the fiat calculation is direct and no follow-up calculation id is required. |
+| `withdrawalAmount` | `string` | Amount requested for withdrawal. |
+| `commissionAmount` | `string` | Commission amount for the operation. |
+| `receivedAmount` | `string` | Net amount expected after fees/commissions. |
+| `expirationDate` | `string/null` | Expiration timestamp in server date-time format, if returned. |
 
 ### Errors
 
@@ -649,9 +649,9 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `transactionId` | `string` | Yes | Created fiat withdrawal transaction identifier used for tracking payout status and reconciliation. |
+| Name | Type | Description |
+|---|---|---|
+| `transactionId` | `string` | Created fiat withdrawal transaction identifier used for tracking payout status and reconciliation. |
 
 ### Errors
 
@@ -749,29 +749,29 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Quote id used to create order. |
-| `rate` | `string` | Yes | Rate pair for the operation. |
-| `systemRateValue` | `string` | Yes | Base system rate at calculation time. |
-| `exchangeRateValue` | `string` | Yes | Exchange rate applied to this quote/order. |
-| `actualRateValue` | `string` | Yes | Effective client-facing rate after adjustments. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
-| `expirationDate` | `string` | Yes | Expiration timestamp in server date-time format, if returned. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` | `string` | Yes | Source asset code. |
-| `input.amount` | `string` | Yes | Source amount used in quote calculation. |
-| `input.feeAmount` / `output.feeAmount` | `string` | Yes | Fee amount on each operation leg. |
-| `input.provider` | `string/null` | No | Fiat provider code for source leg when source type is `FIAT_PROVIDER`. |
-| `input.token` | `string/null` | No | Payment token used by provider source leg, if required by provider flow. |
-| `input.paymentType` | `string` | No | Fiat payment type selected by provider configuration. |
-| `input.processingBank` | `string` | No | Processing bank selected for fiat provider route. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `output.asset` | `string` | Yes | Destination asset code. |
-| `output.amount` | `string` | Yes | Destination amount used in quote calculation. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Quote id used to create order. |
+| `rate` | `string` | Rate pair for the operation. |
+| `systemRateValue` | `string` | Base system rate at calculation time. |
+| `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
+| `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `creationDate` | `string` | Creation timestamp in server date-time format. |
+| `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | Source asset code. |
+| `input.amount` | `string` | Source amount used in quote calculation. |
+| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| `input.provider` | `string/null` | Fiat provider code for source leg when source type is `FIAT_PROVIDER`. |
+| `input.token` | `string/null` | Payment token used by provider source leg, if required by provider flow. |
+| `input.paymentType` | `string` | Fiat payment type selected by provider configuration. |
+| `input.processingBank` | `string` | Processing bank selected for fiat provider route. |
+| `output.type` | `string` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | Destination asset code. |
+| `output.amount` | `string` | Destination amount used in quote calculation. |
 
 ### Errors
 
@@ -878,51 +878,51 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Order id. |
-| `number` | `number` | Yes | Human-readable order number. |
-| `conditions` | `object` | No | Detailed order/quote calculation breakdown. |
-| `conditions.fromAsset` | `string` | No | Source asset code in calculation conditions. |
-| `conditions.toAsset` | `string` | No | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | No | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | No | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | No | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | No | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | No | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | No | Destination-side fee amount in calculation conditions. |
-| `conditions.rate` | `string` | No | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | No | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | No | Effective client-facing rate value in calculation conditions. |
-| `recalculationReason` | `string/null` | No | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
-| `completionDate` | `string/null` | No | Order completion timestamp when order is finished; `null` while order is still active. |
-| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
-| `sessionId` | `string/null` | No | Optional client session identifier bound to this order. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
-| `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | No | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for a specific operation leg. |
-| `input.expirationDate` / `output.expirationDate` | `string/null` | No | Expiration timestamp for operation leg context, if provided. |
-| `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | No | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | No | Processing bank metadata for fiat-provider operation leg. |
-| `input.clientBank` / `output.clientBank` | `string/null` | No | Client bank metadata if returned by provider route. |
-| `input.fromToken` / `output.fromToken` | `string/null` | No | Source payment token used by provider leg. |
-| `input.toToken` / `output.toToken` | `string/null` | No | Destination payment token used by provider leg. |
-| `input.link` / `output.link` | `string/null` | No | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | No | External provider transaction id for reconciliation. |
-| `input.processorTransactionNumber` / `output.processorTransactionNumber` | `string/null` | No | External provider transaction number/reference shown by provider systems for support and reconciliation. |
-| `input.post` / `output.post` | `string/null` | No | Additional provider payload or form-POST metadata when present. |
-| `input.paymentSystem` / `output.paymentSystem` | `string/null` | No | Payment system metadata returned by provider integration. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Order id. |
+| `number` | `number` | Human-readable order number. |
+| `conditions` | `object` | Detailed order/quote calculation breakdown. |
+| `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
+| `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
+| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
+| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
+| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
+| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
+| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
+| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| `conditions.rate` | `string` | Rate pair in calculation conditions. |
+| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
+| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
+| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| `recalculationReason` | `string/null` | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `failureMessage` | `string/null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
+| `completionDate` | `string/null` | Order completion timestamp when order is finished; `null` while order is still active. |
+| `creationDate` | `string` | Creation timestamp in server date-time format. |
+| `sessionId` | `string/null` | Optional client session identifier bound to this order. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
+| `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
+| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
+| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
+| `input.expirationDate` / `output.expirationDate` | `string/null` | Expiration timestamp for operation leg context, if provided. |
+| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
+| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.clientBank` / `output.clientBank` | `string/null` | Client bank metadata if returned by provider route. |
+| `input.fromToken` / `output.fromToken` | `string/null` | Source payment token used by provider leg. |
+| `input.toToken` / `output.toToken` | `string/null` | Destination payment token used by provider leg. |
+| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
+| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
+| `input.processorTransactionNumber` / `output.processorTransactionNumber` | `string/null` | External provider transaction number/reference shown by provider systems for support and reconciliation. |
+| `input.post` / `output.post` | `string/null` | Additional provider payload or form-POST metadata when present. |
+| `input.paymentSystem` / `output.paymentSystem` | `string/null` | Payment system metadata returned by provider integration. |
 
 ### Errors
 
@@ -1019,30 +1019,30 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Quote id used for order creation. |
-| `rate` | `string` | Yes | Rate pair for the operation. |
-| `systemRateValue` | `string` | Yes | Base system rate at calculation time. |
-| `exchangeRateValue` | `string` | Yes | Exchange rate applied to this quote/order. |
-| `actualRateValue` | `string` | Yes | Effective client-facing rate after adjustments. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
-| `expirationDate` | `string` | Yes | Expiration timestamp in server date-time format, if returned. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` | `string` | Yes | Source asset code. |
-| `input.amount` | `string` | Yes | Source amount used in quote calculation. |
-| `input.feeAmount` | `string` | Yes | Fee amount on source leg. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `output.asset` | `string` | Yes | Destination asset code. |
-| `output.amount` | `string` | Yes | Destination amount for quote/order calculation. |
-| `output.feeAmount` | `string` | Yes | Fiat provider/exchange fee amount. |
-| `output.provider` | `string/null` | No | Fiat provider code for destination leg when destination type is `FIAT_PROVIDER`. |
-| `output.token` | `string/null` | No | Payment token used by provider destination leg, if required by provider flow. |
-| `output.paymentType` | `string` | No | Fiat payment type. |
-| `output.processingBank` | `string` | No | Processing bank selected by provider route. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Quote id used for order creation. |
+| `rate` | `string` | Rate pair for the operation. |
+| `systemRateValue` | `string` | Base system rate at calculation time. |
+| `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
+| `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `creationDate` | `string` | Creation timestamp in server date-time format. |
+| `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | Source asset code. |
+| `input.amount` | `string` | Source amount used in quote calculation. |
+| `input.feeAmount` | `string` | Fee amount on source leg. |
+| `output.type` | `string` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | Destination asset code. |
+| `output.amount` | `string` | Destination amount for quote/order calculation. |
+| `output.feeAmount` | `string` | Fiat provider/exchange fee amount. |
+| `output.provider` | `string/null` | Fiat provider code for destination leg when destination type is `FIAT_PROVIDER`. |
+| `output.token` | `string/null` | Payment token used by provider destination leg, if required by provider flow. |
+| `output.paymentType` | `string` | Fiat payment type. |
+| `output.processingBank` | `string` | Processing bank selected by provider route. |
 
 ### Errors
 
@@ -1147,46 +1147,46 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Order id. |
-| `number` | `number` | Yes | Human-readable order number. |
-| `conditions` | `object` | No | Detailed order/quote calculation breakdown. |
-| `conditions.fromAsset` | `string` | No | Source asset code in calculation conditions. |
-| `conditions.toAsset` | `string` | No | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | No | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | No | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | No | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | No | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | No | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | No | Destination-side fee amount in calculation conditions. |
-| `conditions.rate` | `string` | No | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | No | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | No | Effective client-facing rate value in calculation conditions. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
-| `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | No | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for a specific operation leg. |
-| `input.expirationDate` / `output.expirationDate` | `string/null` | No | Expiration timestamp for operation leg context, if provided. |
-| `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | No | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | No | Processing bank metadata for fiat-provider operation leg. |
-| `input.clientBank` / `output.clientBank` | `string/null` | No | Client bank metadata if returned by provider route. |
-| `input.fromToken` / `output.fromToken` | `string/null` | No | Source payment token used by provider leg. |
-| `input.toToken` / `output.toToken` | `string/null` | No | Destination payment token used by provider leg. |
-| `input.link` / `output.link` | `string/null` | No | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | No | External provider transaction id for reconciliation. |
-| `input.post` / `output.post` | `string/null` | No | Additional provider payload or form-POST metadata when present. |
-| `input.paymentSystem` / `output.paymentSystem` | `string/null` | No | Payment system metadata returned by provider integration. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Order id. |
+| `number` | `number` | Human-readable order number. |
+| `conditions` | `object` | Detailed order/quote calculation breakdown. |
+| `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
+| `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
+| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
+| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
+| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
+| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
+| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
+| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| `conditions.rate` | `string` | Rate pair in calculation conditions. |
+| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
+| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
+| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `failureMessage` | `string/null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
+| `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
+| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
+| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
+| `input.expirationDate` / `output.expirationDate` | `string/null` | Expiration timestamp for operation leg context, if provided. |
+| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
+| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.clientBank` / `output.clientBank` | `string/null` | Client bank metadata if returned by provider route. |
+| `input.fromToken` / `output.fromToken` | `string/null` | Source payment token used by provider leg. |
+| `input.toToken` / `output.toToken` | `string/null` | Destination payment token used by provider leg. |
+| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
+| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
+| `input.post` / `output.post` | `string/null` | Additional provider payload or form-POST metadata when present. |
+| `input.paymentSystem` / `output.paymentSystem` | `string/null` | Payment system metadata returned by provider integration. |
 
 ### Errors
 
@@ -1296,49 +1296,49 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `content` | `array of objects` | Yes | Page content with order objects. |
-| `id` | `string` | Yes | Order id. |
-| `number` | `number` | Yes | Human-readable order number. |
-| `conditions` | `object` | No | Detailed order/quote calculation breakdown. |
-| `conditions.fromAsset` | `string` | No | Source asset code in calculation conditions. |
-| `conditions.toAsset` | `string` | No | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | No | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | No | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | No | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | No | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | No | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | No | Destination-side fee amount in calculation conditions. |
-| `conditions.rate` | `string` | No | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | No | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | No | Effective client-facing rate value in calculation conditions. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | No | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
-| `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | No | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for a specific operation leg. |
-| `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | No | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | No | Processing bank metadata for fiat-provider operation leg. |
-| `input.link` / `output.link` | `string/null` | No | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | No | External provider transaction id for reconciliation. |
-| `totalElements` | `number` | Yes | Total number of matching orders. |
-| `totalPages` | `number` | Yes | Total number of pages. |
-| `number` | `number` | Yes | Current page number. |
-| `size` | `number` | Yes | Current page size. |
-| `first` | `boolean` | No | `true` when current page is first page. |
-| `last` | `boolean` | No | `true` when current page is last page. |
-| `numberOfElements` | `number` | No | Number of items on current page. |
-| `empty` | `boolean` | No | `true` when `content` array is empty. |
+| Name | Type | Description |
+|---|---|---|
+| `content` | `array of objects` | Page content with order objects. |
+| `id` | `string` | Order id. |
+| `number` | `number` | Human-readable order number. |
+| `conditions` | `object` | Detailed order/quote calculation breakdown. |
+| `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
+| `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
+| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
+| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
+| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
+| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
+| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
+| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| `conditions.rate` | `string` | Rate pair in calculation conditions. |
+| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
+| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
+| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `failureMessage` | `string/null` | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
+| `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
+| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
+| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
+| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
+| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
+| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
+| `totalElements` | `number` | Total number of matching orders. |
+| `totalPages` | `number` | Total number of pages. |
+| `number` | `number` | Current page number. |
+| `size` | `number` | Current page size. |
+| `first` | `boolean` | `true` when current page is first page. |
+| `last` | `boolean` | `true` when current page is last page. |
+| `numberOfElements` | `number` | Number of items on current page. |
+| `empty` | `boolean` | `true` when `content` array is empty. |
 
 ### Errors
 
@@ -1409,12 +1409,12 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `fromMinAmount` | `string` | Yes | Minimum allowed source amount. |
-| `fromMaxAmount` | `string` | Yes | Maximum allowed source amount. |
-| `toMinAmount` | `string` | Yes | Minimum allowed destination amount. |
-| `toMaxAmount` | `string` | Yes | Maximum allowed destination amount. |
+| Name | Type | Description |
+|---|---|---|
+| `fromMinAmount` | `string` | Minimum allowed source amount. |
+| `fromMaxAmount` | `string` | Maximum allowed source amount. |
+| `toMinAmount` | `string` | Minimum allowed destination amount. |
+| `toMaxAmount` | `string` | Maximum allowed destination amount. |
 
 ### Errors
 
@@ -1500,26 +1500,26 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Quote id used for conversion order. |
-| `rate` | `string` | Yes | Rate pair for the operation. |
-| `systemRateValue` | `string` | Yes | Base system rate at calculation time. |
-| `exchangeRateValue` | `string` | Yes | Exchange rate applied to this quote/order. |
-| `actualRateValue` | `string` | Yes | Effective client-facing rate after adjustments. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
-| `expirationDate` | `string` | Yes | Expiration timestamp in server date-time format, if returned. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` | `string` | Yes | Source asset code. |
-| `input.amount` | `string` | Yes | Source amount used in quote calculation. |
-| `input.feeAmount` | `string` | Yes | Fee amount on source leg. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `output.asset` | `string` | Yes | Destination asset code. |
-| `output.amount` | `string` | Yes | Destination amount used in quote calculation. |
-| `output.feeAmount` | `string` | Yes | Fee amount on destination leg. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Quote id used for conversion order. |
+| `rate` | `string` | Rate pair for the operation. |
+| `systemRateValue` | `string` | Base system rate at calculation time. |
+| `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
+| `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `creationDate` | `string` | Creation timestamp in server date-time format. |
+| `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | Source asset code. |
+| `input.amount` | `string` | Source amount used in quote calculation. |
+| `input.feeAmount` | `string` | Fee amount on source leg. |
+| `output.type` | `string` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | Destination asset code. |
+| `output.amount` | `string` | Destination amount used in quote calculation. |
+| `output.feeAmount` | `string` | Fee amount on destination leg. |
 
 ### Errors
 
@@ -1614,41 +1614,41 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 
 ### Response
 
-| Name | Type | Required | Description |
-|---|---|---:|---|
-| `id` | `string` | Yes | Conversion order id. |
-| `number` | `number` | Yes | Human-readable order number. |
-| `conditions` | `object` | No | Detailed order/quote calculation breakdown. |
-| `conditions.fromAsset` | `string` | No | Source asset code in calculation conditions. |
-| `conditions.toAsset` | `string` | No | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | No | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | No | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | No | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | No | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | No | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | No | Destination-side fee amount in calculation conditions. |
-| `conditions.rate` | `string` | No | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | No | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | No | Effective client-facing rate value in calculation conditions. |
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | No | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
-| `input` | `object` | Yes | Source operation details object. |
-| `output` | `object` | Yes | Destination operation details object. |
-| `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
-| `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | No | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | No | Fee amount on each operation leg. |
-| `input.status` / `output.status` | `string` | Yes | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | No | Failure reason for a specific operation leg. |
-| `input.expirationDate` / `output.expirationDate` | `string/null` | No | Expiration timestamp for operation leg context, if provided. |
-| `input.provider` / `output.provider` | `string/null` | No | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | No | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | No | Processing bank metadata for fiat-provider operation leg. |
-| `input.link` / `output.link` | `string/null` | No | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | No | External provider transaction id for reconciliation. |
+| Name | Type | Description |
+|---|---|---|
+| `id` | `string` | Conversion order id. |
+| `number` | `number` | Human-readable order number. |
+| `conditions` | `object` | Detailed order/quote calculation breakdown. |
+| `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
+| `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
+| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
+| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
+| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
+| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
+| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
+| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| `conditions.rate` | `string` | Rate pair in calculation conditions. |
+| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
+| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
+| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| `clientId` | `string` | Client identifier used to scope the request to a specific client. |
+| `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `failureMessage` | `string/null` | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
+| `input` | `object` | Source operation details object. |
+| `output` | `object` | Destination operation details object. |
+| `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
+| `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
+| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
+| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
+| `input.expirationDate` / `output.expirationDate` | `string/null` | Expiration timestamp for operation leg context, if provided. |
+| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
+| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
+| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
 
 ### Errors
 
