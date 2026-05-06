@@ -136,20 +136,28 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 |---|---|---:|---|
 | `fiatOperations` | `array of objects` | Yes | Current fiat wallet operations. |
 | `cryptoOperations` | `array of objects` | Yes | Current crypto wallet operations. |
-| `number` | `number` | Yes | Human-readable operation number. |
-| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
-| `operationType` | `string` | Yes | Operation direction/type, for example `DEPOSIT` or `WITHDRAWAL`. |
-| `amount` | `number` | Yes | Operation amount in the asset currency. |
-| `transactionId` | `string` | Yes | Internal fiat or crypto transaction id. |
-| `asset` | `string` | Yes | Asset used by the operation. |
-| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `fiatProvider` | `string` | No | Fiat provider used by fiat operation. |
-| `orderIdentity` | `string` | No | Provider/order reference. |
-| `submitTimeout` | `string` | No | Crypto deposit timeout mode. |
-| `depositCryptoAddress` | `string` | No | Address where the user must send crypto for deposit. |
-| `network` | `string` | No | Blockchain network. |
-| `txHash` | `string/null` | No | Blockchain transaction hash after the crypto transfer is detected; use for explorer links and reconciliation. |
-| `createdAt` | `string` | Yes | Operation creation date/time. |
+| `fiatOperations[].number` | `number` | Yes | Human-readable fiat operation number. |
+| `fiatOperations[].accountType` | `string` | Yes | Fiat operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
+| `fiatOperations[].operationType` | `string` | Yes | Fiat operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| `fiatOperations[].amount` | `number` | Yes | Fiat operation amount in fiat asset currency. |
+| `fiatOperations[].transactionId` | `string` | Yes | Internal fiat transaction identifier. |
+| `fiatOperations[].asset` | `string` | Yes | Fiat asset code of the operation. |
+| `fiatOperations[].status` | `string` | Yes | Fiat transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `REJECTED`, `TIMEOUT`, `DECLINED`, `INVALID_AMOUNT`, `ERROR`, `AML_BLOCKED`, `PENDING`, `PROCESSING`, `APPROVED`. |
+| `fiatOperations[].fiatProvider` | `string` | No | Fiat provider used by the fiat operation. |
+| `fiatOperations[].orderIdentity` | `string` | No | Provider-side order reference used for support/reconciliation. |
+| `fiatOperations[].createdAt` | `string` | Yes | Fiat operation creation date/time. |
+| `cryptoOperations[].number` | `number` | Yes | Human-readable crypto operation number. |
+| `cryptoOperations[].accountType` | `string` | Yes | Crypto operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
+| `cryptoOperations[].operationType` | `string` | Yes | Crypto operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| `cryptoOperations[].amount` | `number` | Yes | Crypto operation amount in crypto asset units. |
+| `cryptoOperations[].transactionId` | `string` | Yes | Internal crypto transaction identifier. |
+| `cryptoOperations[].asset` | `string` | Yes | Crypto asset code of the operation. |
+| `cryptoOperations[].status` | `string` | Yes | Crypto transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `NOT_FOUND`, `REJECTED`, `TIMEOUT`, `INVALID_AMOUNT`, `ERROR`, `AML_ERROR`, `AML_BLOCKED`, `ARREST`, `SUBMITTING`, `SUBMITTED`, `PENDING`, `SELECTED`, `CONFIRMED`, `PENDING_RESOLVE`. |
+| `cryptoOperations[].submitTimeout` | `string` | No | Crypto deposit timeout policy/mode. |
+| `cryptoOperations[].depositCryptoAddress` | `string` | No | Blockchain address where client sends funds for crypto deposit. |
+| `cryptoOperations[].network` | `string` | No | Blockchain network of the crypto operation. |
+| `cryptoOperations[].txHash` | `string/null` | No | Blockchain transaction hash after transfer is detected. |
+| `cryptoOperations[].createdAt` | `string` | Yes | Crypto operation creation date/time. |
 
 ### Errors
 
