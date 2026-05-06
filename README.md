@@ -301,7 +301,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 | `brand` | `string` | No | Payment method brand, for example `VISA`. |
 | `providerId` | `string` | Yes | Provider identifier. |
 | `providerType` | `string` | Yes | Provider type, for example `ASSIST`. |
-| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| `status` | `string` | Yes | Payment method status. Allowed values: `ENABLED`, `DIRECTION_DISABLED`, `CURRENCY_DISABLED`. |
 | `isRestricted` | `boolean` | Yes | Shows whether this payment method is restricted. |
 | `isCrypto` | `boolean` | Yes | Shows whether method is crypto-related. |
 | `country` | `string` | No | Payment method country. |
@@ -761,9 +761,17 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 | `expirationDate` | `string` | Yes | Expiration timestamp in server date-time format, if returned. |
 | `input` | `object` | Yes | Source operation details object. |
 | `output` | `object` | Yes | Destination operation details object. |
+| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | Yes | Source asset code. |
+| `input.amount` | `string` | Yes | Source amount used in quote calculation. |
 | `input.feeAmount` / `output.feeAmount` | `string` | Yes | Fee amount on each operation leg. |
+| `input.provider` | `string/null` | No | Fiat provider code for source leg when source type is `FIAT_PROVIDER`. |
+| `input.token` | `string/null` | No | Payment token used by provider source leg, if required by provider flow. |
 | `input.paymentType` | `string` | No | Fiat payment type selected by provider configuration. |
 | `input.processingBank` | `string` | No | Processing bank selected for fiat provider route. |
+| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | Yes | Destination asset code. |
+| `output.amount` | `string` | Yes | Destination amount used in quote calculation. |
 
 ### Errors
 
@@ -1015,12 +1023,24 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 |---|---|---:|---|
 | `id` | `string` | Yes | Quote id used for order creation. |
 | `rate` | `string` | Yes | Rate pair for the operation. |
+| `systemRateValue` | `string` | Yes | Base system rate at calculation time. |
+| `exchangeRateValue` | `string` | Yes | Exchange rate applied to this quote/order. |
+| `actualRateValue` | `string` | Yes | Effective client-facing rate after adjustments. |
 | `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
+| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
 | `expirationDate` | `string` | Yes | Expiration timestamp in server date-time format, if returned. |
 | `input` | `object` | Yes | Source operation details object. |
 | `output` | `object` | Yes | Destination operation details object. |
+| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | Yes | Source asset code. |
+| `input.amount` | `string` | Yes | Source amount used in quote calculation. |
+| `input.feeAmount` | `string` | Yes | Fee amount on source leg. |
+| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | Yes | Destination asset code. |
 | `output.amount` | `string` | Yes | Destination amount for quote/order calculation. |
 | `output.feeAmount` | `string` | Yes | Fiat provider/exchange fee amount. |
+| `output.provider` | `string/null` | No | Fiat provider code for destination leg when destination type is `FIAT_PROVIDER`. |
+| `output.token` | `string/null` | No | Payment token used by provider destination leg, if required by provider flow. |
 | `output.paymentType` | `string` | No | Fiat payment type. |
 | `output.processingBank` | `string` | No | Processing bank selected by provider route. |
 
@@ -1488,10 +1508,18 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 | `exchangeRateValue` | `string` | Yes | Exchange rate applied to this quote/order. |
 | `actualRateValue` | `string` | Yes | Effective client-facing rate after adjustments. |
 | `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
+| `creationDate` | `string` | Yes | Creation timestamp in server date-time format. |
 | `expirationDate` | `string` | Yes | Expiration timestamp in server date-time format, if returned. |
 | `input` | `object` | Yes | Source operation details object. |
 | `output` | `object` | Yes | Destination operation details object. |
-| `feeAmount` | `string` | Yes | Fee amount on source/destination side. |
+| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | Yes | Source asset code. |
+| `input.amount` | `string` | Yes | Source amount used in quote calculation. |
+| `input.feeAmount` | `string` | Yes | Fee amount on source leg. |
+| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | Yes | Destination asset code. |
+| `output.amount` | `string` | Yes | Destination amount used in quote calculation. |
+| `output.feeAmount` | `string` | Yes | Fee amount on destination leg. |
 
 ### Errors
 
