@@ -15,8 +15,8 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 
 **POST** `/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Response**
 
@@ -78,8 +78,8 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 
 **GET** `/api/v2/exchange/merchant/balance/current?clientId={{clientId}}`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Response**
 
@@ -176,8 +176,8 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 
 **POST** `/api/v2/exchange/merchant/balance/crypto/deposit`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -242,8 +242,8 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 
 **POST** `/api/v2/exchange/merchant/payment/method`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -326,8 +326,8 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 
 **POST** `/api/v2/exchange/merchant/balance/fiat/deposit`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -406,8 +406,8 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal/calculate`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -478,8 +478,8 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 
 **POST** `/api/v2/exchange/merchant/balance/crypto/withdrawal`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -530,8 +530,8 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal/calculate`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -603,8 +603,8 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 
 **POST** `/api/v2/exchange/merchant/balance/fiat/withdrawal`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -674,8 +674,8 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 
 **POST** `/api/v3/exchange/merchant/quote`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -791,8 +791,8 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 
 **POST** `/api/v3/exchange/merchant/order`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -945,8 +945,8 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 
 **POST** `/api/v3/exchange/merchant/quote`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -1061,8 +1061,8 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 
 **POST** `/api/v3/exchange/merchant/order`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -1209,8 +1209,8 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 
 **POST** `/api/v3/exchange/merchant/order/history?page=0&size=20&sort=creationDate,desc`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -1361,8 +1361,8 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 
 **POST** `/api/v3/exchange/merchant/limit`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -1433,8 +1433,8 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 
 **POST** `/api/v3/exchange/merchant/quote`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
@@ -1538,8 +1538,8 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 
 **POST** `/api/v3/exchange/merchant/order`
 
-### Headers
-- `x-api-key: {{x-api-key}}`
+**Headers**
+ - `x-api-key: {{x-api-key}}`
 
 **Request**
 
