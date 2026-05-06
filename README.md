@@ -46,7 +46,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `destination` | `string` | No | Query parameter that filters assets for a specific flow. For custodial wallet use `SDK_ACCOUNTING`. |
+| `destination` | `string` | No | Flow destination filter. Use `SDK_ACCOUNTING` for custodial wallet operations. |
 
 ### Response
 
@@ -126,7 +126,7 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to one merchant client and return only that client's wallet data. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 
 ### Response
 
@@ -135,12 +135,12 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 | `fiatOperations` | `array of objects` | Yes | Current fiat wallet operations. |
 | `cryptoOperations` | `array of objects` | Yes | Current crypto wallet operations. |
 | `number` | `number` | Yes | Human-readable operation number. |
-| `accountType` | `string` | Yes | Account scope for the operation. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet endpoints. |
+| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
 | `operationType` | `string` | Yes | Operation direction/type, for example `DEPOSIT` or `WITHDRAWAL`. |
 | `amount` | `number` | Yes | Operation amount in the asset currency. |
 | `transactionId` | `string` | Yes | Internal fiat or crypto transaction id. |
 | `asset` | `string` | Yes | Asset used by the operation. |
-| `status` | `string` | Yes | Current processing status of the operation. |
+| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `fiatProvider` | `string` | No | Fiat provider used by fiat operation. |
 | `orderIdentity` | `string` | No | Provider/order reference. |
 | `submitTimeout` | `string` | No | Crypto deposit timeout mode. |
@@ -201,8 +201,8 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier for whom the deposit operation is created. |
-| `accountType` | `string` | Yes | Account scope for balance mutation. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet operations. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
 | `asset.code` | `string` | Yes | Asset identifier used to create the operation; must match one of the assets returned by the assets endpoint. |
 | `asset.network` | `string` | Yes | Blockchain network for address generation; prevents creating a deposit address for the wrong network. |
 | `asset.amount` | `number` | Yes | Amount expected from the client; used for limits, display, and operation tracking. |
@@ -274,10 +274,10 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier used to return only payment methods available to this client. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `fiatAsset` | `string` | No | Fiat currency filter, for example `BYN`. |
 | `orderType` | `string` | No | Operation type filter, for example `BUY` for fiat input. |
-| `destination` | `string` | No | Flow filter. For custodial wallet use `SDK_ACCOUNTING`. |
+| `destination` | `string` | No | Flow destination filter. Use `SDK_ACCOUNTING` for custodial wallet operations. |
 | `providers` | `array of strings` | No | Optional list of allowed fiat providers. |
 | `isCrypto` | `boolean` | No | Optional filter for crypto-related payment methods. |
 | `countryGroup` | `string` | No | Optional country group filter. |
@@ -291,7 +291,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 | `brand` | `string` | No | Payment method brand, for example `VISA`. |
 | `providerId` | `string` | Yes | Provider identifier. |
 | `providerType` | `string` | Yes | Provider type, for example `ASSIST`. |
-| `status` | `string` | Yes | Payment method status. Use enabled methods only. |
+| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `isRestricted` | `boolean` | Yes | Shows whether this payment method is restricted. |
 | `isCrypto` | `boolean` | Yes | Shows whether method is crypto-related. |
 | `country` | `string` | No | Payment method country. |
@@ -357,8 +357,8 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier for whom the fiat wallet deposit is created. |
-| `accountType` | `string` | Yes | Account scope for balance mutation. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet operations. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
 | `fiatProviderType` | `string` | Yes | Fiat provider used for payment processing, for example `ASSIST`. |
 | `paymentToken` | `string` | Conditional | Token of the client saved payment method. Use it to route fiat payment/payout through a selected card or payment instrument. Required if `internalToken` is not used. |
 | `internalToken` | `string` | Conditional | Internal token alternative used when the payment instrument is represented by internal provider data instead of `paymentToken`. Required if `paymentToken` is not used. |
@@ -433,7 +433,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier whose wallet balance will be used for crypto withdrawal. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `asset.amount` | `number` | Yes | Amount to withdraw before commission. |
 | `asset.code` | `string` | Yes | Crypto asset code. |
 | `asset.network` | `string` | Yes | Blockchain network. |
@@ -497,8 +497,8 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier for whom the withdrawal operation is created. |
-| `accountType` | `string` | Yes | Source account scope for debit operation. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` in custodial wallet flow. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
 | `calculationId` | `string` | Yes | Calculation id returned by withdrawal calculation endpoint. |
 | `comment` | `string` | No | Optional memo/comment/tag for networks that require additional destination data. |
 
@@ -563,7 +563,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier whose wallet fiat balance will be used for payout calculation. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `fiatProviderType` | `string` | Yes | Fiat provider used for payout. |
 | `paymentToken` | `string` | Conditional | Payment method token for fiat withdrawal. |
 | `internalToken` | `string` | Conditional | Internal token alternative. |
@@ -632,8 +632,8 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier for whom the fiat withdrawal operation is created. |
-| `accountType` | `string` | Yes | Source account scope for debit operation. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` in custodial wallet flow. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
 | `fiatProviderType` | `string` | Yes | Fiat provider used for payout. |
 | `paymentToken` | `string` | Conditional | Token of the client saved payment method. Use it to route fiat payment/payout through a selected card or payment instrument. Required if `internalToken` is not used. |
 | `internalToken` | `string` | Conditional | Internal token alternative used when the payment instrument is represented by internal provider data instead of `paymentToken`. Required if `paymentToken` is not used. |
@@ -729,13 +729,13 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier used to calculate quote limits, fees, and eligibility for this client. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. For buy, use `FIAT_PROVIDER`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Yes | Source fiat asset. |
 | `input.amount` | `number` | Conditional | Source amount. At least one of `input.amount` or `output.amount` is required. |
 | `input.provider` | `string` | Yes | Fiat provider used for payment. |
 | `input.token` | `string` | Conditional | Payment token used for provider payment. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. For buy destination, use `INTERNAL_BALANCE`. |
+| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | Yes | Crypto asset that will be credited to internal balance. |
 | `output.amount` | `number` | Conditional | Target amount. At least one of `input.amount` or `output.amount` is required. |
 
@@ -748,11 +748,11 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 | `systemRateValue` | `string` | Yes | Base system rate before merchant/customer fee effects. |
 | `exchangeRateValue` | `string` | Yes | Exchange rate applied to the quote. |
 | `actualRateValue` | `string` | Yes | Actual resulting rate for displayed amounts. |
-| `clientId` | `string` | Yes | Client id for the quote. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `creationDate` | `string` | Yes | Quote creation date/time. |
 | `expirationDate` | `string` | Yes | Quote expiration date/time. |
-| `input` | `object` | Yes | Calculated source payment details. |
-| `output` | `object` | Yes | Calculated destination payment details. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `input.feeAmount` / `output.feeAmount` | `string` | Yes | Fee amount for each side of the operation. |
 | `input.paymentType` | `string` | No | Fiat payment type selected by provider configuration. |
 | `input.processingBank` | `string` | No | Processing bank selected for fiat provider route. |
@@ -857,7 +857,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote identifier returned by quote creation. It fixes the calculated amounts/rates and must be used before quote expiration. |
+| `quoteId` | `string` | Yes | Quote identifier returned by quote creation; required to create an order before quote expiration. |
 
 ### Response
 
@@ -879,14 +879,14 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `conditions.exchangeRateValue` | `string` | No | Exchange rate applied for this quote/order. |
 | `conditions.actualRateValue` | `string` | No | Effective client-facing rate after adjustments. |
 | `recalculationReason` | `string/null` | No | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
-| `clientId` | `string` | Yes | Client id for this order. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
 | `completionDate` | `string/null` | No | Order completion timestamp when order is finished; `null` while order is still active. |
 | `creationDate` | `string` | Yes | Order creation timestamp in server timezone format. |
 | `sessionId` | `string/null` | No | Optional client session identifier bound to this order. |
-| `input` | `object` | Yes | Source operation details. |
-| `output` | `object` | Yes | Destination operation details. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
@@ -990,11 +990,11 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier used to calculate sell quote, fees, and wallet-balance eligibility. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. For sell source, use `INTERNAL_BALANCE`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Yes | Crypto asset being sold. |
 | `input.amount` | `number` | Conditional | Source amount. At least one of `input.amount` or `output.amount` is required. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. For sell payout, use `FIAT_PROVIDER`. |
+| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | Yes | Fiat asset to receive. |
 | `output.provider` | `string` | Yes | Fiat provider. |
 | `output.token` | `string` | Conditional | Payment token for receiving fiat. |
@@ -1005,10 +1005,10 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 |---|---|---:|---|
 | `id` | `string` | Yes | Quote id used for order creation. |
 | `rate` | `string` | Yes | Currency pair. |
-| `clientId` | `string` | Yes | Client id for the quote. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `expirationDate` | `string` | Yes | Quote expiration date/time. |
-| `input` | `object` | Yes | Calculated source operation details. |
-| `output` | `object` | Yes | Calculated destination operation details. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `output.amount` | `string` | Yes | Fiat amount expected before/after fee according to response details. |
 | `output.feeAmount` | `string` | Yes | Fiat provider/exchange fee amount. |
 | `output.paymentType` | `string` | No | Fiat payment type. |
@@ -1112,7 +1112,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `quoteId` | `string` | Yes | Sell quote identifier returned by quote creation. It fixes the calculated sell amounts/rates and must be used before expiration. |
+| `quoteId` | `string` | Yes | Quote identifier returned by quote creation; required to create an order before quote expiration. |
 
 ### Response
 
@@ -1133,11 +1133,11 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 | `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
 | `conditions.exchangeRateValue` | `string` | No | Exchange rate applied for this quote/order. |
 | `conditions.actualRateValue` | `string` | No | Effective client-facing rate after adjustments. |
-| `clientId` | `string` | Yes | Client id for this order. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string/null` | No | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
-| `input` | `object` | Yes | Source crypto/internal balance operation. |
-| `output` | `object` | Yes | Destination fiat provider operation. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
@@ -1282,11 +1282,11 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 | `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
 | `conditions.exchangeRateValue` | `string` | No | Exchange rate applied for order conditions. |
 | `conditions.actualRateValue` | `string` | No | Effective client-facing rate for historical order item. |
-| `clientId` | `string` | Yes | Client id. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string/null` | No | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
-| `input` | `object` | Yes | Source operation details. |
-| `output` | `object` | Yes | Destination operation details. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
@@ -1368,7 +1368,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier used to apply client-specific limits before quote creation. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `fromAsset` | `string` | Yes | Source asset. |
 | `fromPaymentDetails.type` | `string` | Yes | Source payment type. For conversion use `INTERNAL_BALANCE`. |
 | `toAsset` | `string` | Yes | Destination asset. |
@@ -1456,11 +1456,11 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `clientId` | `string` | Yes | WhiteBird client identifier used to calculate quote limits, fees, and eligibility for this client. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. For conversion source, use `INTERNAL_BALANCE`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Yes | Source asset. |
 | `input.amount` | `number` | Conditional | Source amount. At least one side amount is required. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. For conversion destination, use `INTERNAL_BALANCE`. |
+| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | Yes | Destination asset. |
 | `output.amount` | `number` | Conditional | Destination amount. At least one side amount is required. |
 
@@ -1473,10 +1473,10 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 | `systemRateValue` | `string` | Yes | Base system rate. |
 | `exchangeRateValue` | `string` | Yes | Exchange rate applied to quote. |
 | `actualRateValue` | `string` | Yes | Actual resulting rate. |
-| `clientId` | `string` | Yes | Client id. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
 | `expirationDate` | `string` | Yes | Quote expiration date/time. |
-| `input` | `object` | Yes | Calculated source details. |
-| `output` | `object` | Yes | Calculated destination details. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `feeAmount` | `string` | Yes | Fee amount on source/destination side. |
 
 ### Errors
@@ -1567,7 +1567,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 
 | Name | Type | Required | Description |
 |---|---|---:|---|
-| `quoteId` | `string` | Yes | Conversion quote identifier returned by quote creation. It fixes the conversion rate and amounts until expiration. |
+| `quoteId` | `string` | Yes | Quote identifier returned by quote creation; required to create an order before quote expiration. |
 
 ### Response
 
@@ -1588,11 +1588,11 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 | `conditions.systemRateValue` | `string` | No | Base system rate at calculation time. |
 | `conditions.exchangeRateValue` | `string` | No | Exchange rate applied for this conversion. |
 | `conditions.actualRateValue` | `string` | No | Effective client-facing rate after adjustments. |
-| `clientId` | `string` | Yes | Client id. |
-| `status` | `string` | Yes | Conversion order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`; most internal swaps end as `COMPLETED`. |
+| `clientId` | `string` | Yes | WhiteBird client identifier used to scope the request to a specific client. |
+| `status` | `string` | Yes | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string/null` | No | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
-| `input` | `object` | Yes | Source internal balance operation. |
-| `output` | `object` | Yes | Destination internal balance operation. |
+| `input` | `object` | Yes | Source operation details object. |
+| `output` | `object` | Yes | Destination operation details object. |
 | `input.type` / `output.type` | `string` | No | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | No | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | No | Operation amount for each leg. |
