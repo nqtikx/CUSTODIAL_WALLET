@@ -764,9 +764,9 @@ Use this endpoint to create a buy crypto quote and lock rate/amounts for a short
 | --- | --- | --- |
 | `id` | `string` | Quote id used to create order. |
 | `rate` | `string` | Rate pair for the operation. Display this value to the client as the final pair label. |
-| `systemRateValue` | `string` | Base system rate at calculation time. |
-| `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
-| `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
+| `systemRateValue` | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| `exchangeRateValue` | `string` | Rate used by the exchange engine to calculate the quote. |
+| `actualRateValue` | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `creationDate` | `string` | Creation timestamp in server date-time format. |
 | `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
@@ -914,9 +914,9 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
 | <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
-| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
-| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Rate used by the exchange engine to calculate the quote. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `recalculationReason` | `string \| null` | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
@@ -1047,9 +1047,9 @@ Use this endpoint to create a sell crypto quote and lock rate/amounts for sell f
 | --- | --- | --- |
 | `id` | `string` | Quote id used for order creation. |
 | `rate` | `string` | Rate pair for the operation. Display this value to the client as the final pair label. |
-| `systemRateValue` | `string` | Base system rate at calculation time. |
-| `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
-| `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
+| `systemRateValue` | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| `exchangeRateValue` | `string` | Rate used by the exchange engine to calculate the quote. |
+| `actualRateValue` | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `creationDate` | `string` | Creation timestamp in server date-time format. |
 | `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
@@ -1196,9 +1196,9 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
 | <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
-| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
-| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Rate used by the exchange engine to calculate the quote. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string \| null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
@@ -1354,9 +1354,9 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
 | <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
-| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
-| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Rate used by the exchange engine to calculate the quote. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string \| null` | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
@@ -1550,9 +1550,9 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 | --- | --- | --- |
 | `id` | `string` | Quote id used for conversion order. |
 | `rate` | `string` | Rate pair for the operation. Display this value to the client as the final pair label. |
-| `systemRateValue` | `string` | Base system rate at calculation time. |
-| `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
-| `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
+| `systemRateValue` | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| `exchangeRateValue` | `string` | Rate used by the exchange engine to calculate the quote. |
+| `actualRateValue` | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `creationDate` | `string` | Creation timestamp in server date-time format. |
 | `expirationDate` | `string` | Expiration timestamp in server date-time format, if returned. |
@@ -1685,9 +1685,9 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
 | <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
-| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
-| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at the moment of quote calculation. Used as a reference value. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Rate used by the exchange engine to calculate the quote. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Final client-facing rate applied to the quote/order. Show this value to the client. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | `failureMessage` | `string \| null` | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
