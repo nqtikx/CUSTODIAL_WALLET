@@ -3394,13 +3394,13 @@ Use this endpoint to fetch paged order history with optional filters and detaile
       <td style="word-break: break-word; white-space: normal;">creationDateFrame</td>
       <td>object</td>
       <td>No</td>
-      <td>Creation date range filter. Object { "from": "ISO-8601", "to": "ISO-8601" }.</td>
+      <td>Creation date range filter.</td>
     </tr>
     <tr>
       <td style="word-break: break-word; white-space: normal;">completionDateFrame</td>
       <td>object</td>
       <td>No</td>
-      <td>Completion date range filter. Object { "from": "ISO-8601", "to": "ISO-8601" }.</td>
+      <td>Completion date range filter.</td>
     </tr>
     <tr>
       <td style="word-break: break-word; white-space: normal;">inputAssets</td>
