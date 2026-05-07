@@ -773,6 +773,35 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   </tbody>
 </table>
 
+### Payment method status values
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="220" style="word-break: break-word; white-space: normal;">Status</th>
+      <th width="680">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">ENABLED</td>
+      <td>Payment method can be used for the selected flow, direction, and currency.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">DIRECTION_DISABLED</td>
+      <td>Payment method exists, but is not available for selected orderType.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">CURRENCY_DISABLED</td>
+      <td>Payment method exists, but does not support selected fiatAsset.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">UNKNOWN</td>
+      <td>Status cannot be resolved because required filters were not provided.</td>
+    </tr>
+  </tbody>
+</table>
+
 ### Errors
 
 <table width="100%">
