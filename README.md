@@ -47,7 +47,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 
 ### Response
 
@@ -287,7 +287,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 | `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
 | `fiatAsset` | `string` | `No` | Fiat currency filter, for example `BYN`. |
 | `orderType` | `string` | `No` | Operation type filter. Allowed values: `BUY` (fiat input), `SELL` (fiat output). |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 | `providers` | `array of strings` | `No` | Optional list of allowed fiat providers. |
 | `isCrypto` | `boolean` | `No` | Optional filter for crypto-related payment methods. |
 | `countryGroup` | `string` | `No` | Optional country group filter. |
@@ -299,8 +299,8 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 | `id` | `string` | Payment method token. Pass this value as `paymentToken` in fiat deposit/withdrawal or fiat-provider quote requests. |
 | `number` | `string` | Masked payment method number shown to client. |
 | `brand` | `string` | Payment method brand, for example `VISA`. |
-| `providerId` | `string` | Provider identifier (canonical, use this value). Examples: `ASSIST`, `CA`, `MTS`. |
-| `providerType` | `string` | Deprecated. Duplicates `providerId` for backward compatibility; will be removed. |
+| `providerId` | `string` | Payment provider identifier used in integrations and filters (for example `ASSIST`, `CA`, `MTS`). |
+| `providerType` | `string` | Provider category/type returned by provider integration. Usually matches `providerId` for standard routes. |
 | `status` | `string` | Payment method status. Allowed values: `ENABLED`, `DIRECTION_DISABLED`, `CURRENCY_DISABLED`, `UNKNOWN`. See status descriptions below. |
 | `isRestricted` | `boolean` | Shows whether this payment method is restricted. |
 | `isCrypto` | `boolean` | Shows whether method is crypto-related. |
@@ -755,7 +755,7 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 | `output.type` | `string` | `Yes` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | `Yes` | Destination asset code. |
 | `output.amount` | `number` | `Conditional` | Destination amount for quote/order calculation. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 | `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
@@ -893,7 +893,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `failUrl` | `string` | `No` | URL the client should be redirected to on failed payment flow. |
 | `additionalTimeout` | `boolean` | `No` | Extended-timeout flag for slow payment flows. |
 | <nobr>`outputPaymentProcessingType`</nobr> | `string` | `No` | Optional payment processing type for the output leg. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 
 ### Response
 
@@ -1035,7 +1035,7 @@ Use this endpoint to create a sell quote and lock rate/amounts for OffRamp flow.
 | `output.asset` | `string` | `Yes` | Destination asset code. |
 | `output.provider` | `string` | `Yes` | Fiat provider. |
 | `output.token` | `string` | `Conditional` | Payment token for receiving fiat. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 | `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
@@ -1172,7 +1172,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 | `failUrl` | `string` | `No` | URL the client should be redirected to on failed payment flow. |
 | `additionalTimeout` | `boolean` | `No` | Extended-timeout flag for slow payment flows. |
 | <nobr>`outputPaymentProcessingType`</nobr> | `string` | `No` | Optional payment processing type for the output leg. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 
 ### Response
 
@@ -1326,7 +1326,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 | `assets` | `array of string` | `No` | Asset filter applied to either source or destination leg. |
 | `inputAmount` | `object` | `No` | Source amount range filter `{ "from": number, "to": number }`. |
 | `outputAmount` | `object` | `No` | Destination amount range filter `{ "from": number, "to": number }`. |
-| `destinations` | `array of string` | `No` | Filter by flow destination. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destinations` | `array of string` | `No` | Filter by flow destination. |
 | <nobr>`fiatTransactionProviders`</nobr> | `array of string` | `No` | Filter by fiat provider id (for example `ASSIST`). |
 | <nobr>`cryptoTransactionAddresses`</nobr> | `array of string` | `No` | Filter by crypto destination addresses. |
 | <nobr>`cryptoTransactionHashes`</nobr> | `array of string` | `No` | Filter by crypto blockchain transaction hashes. |
@@ -1443,7 +1443,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 | <nobr>`fromPaymentDetails.type`</nobr> | `string` | `Yes` | Source payment type. For conversion use `INTERNAL_BALANCE`. |
 | `toAsset` | `string` | `Yes` | Destination asset. |
 | <nobr>`toPaymentDetails.type`</nobr> | `string` | `Yes` | Destination payment type. For conversion use `INTERNAL_BALANCE`. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 
 ### Response
 
@@ -1535,7 +1535,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 | `output.type` | `string` | `Yes` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | `Yes` | Destination asset code. |
 | `output.amount` | `number` | `Conditional` | Destination amount for quote/order calculation. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 | `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
@@ -1658,7 +1658,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 | `failUrl` | `string` | `No` | URL the client should be redirected to on failed payment flow. |
 | `additionalTimeout` | `boolean` | `No` | Extended-timeout flag for slow payment flows. |
 | <nobr>`outputPaymentProcessingType`</nobr> | `string` | `No` | Optional payment processing type for the output leg. |
-| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. |
 
 ### Response
 
