@@ -37,7 +37,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -58,7 +58,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -79,7 +79,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -133,7 +133,7 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -214,7 +214,7 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -235,7 +235,7 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -256,7 +256,7 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -390,7 +390,7 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -458,7 +458,7 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -479,7 +479,7 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -524,7 +524,7 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -548,7 +548,7 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -626,7 +626,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 ]
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -647,7 +647,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -704,7 +704,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -773,7 +773,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   </tbody>
 </table>
 
-### Payment method status values
+**Payment method status values**
 
 <table width="100%">
   <thead>
@@ -802,7 +802,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -885,7 +885,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -906,7 +906,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -963,7 +963,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -1007,7 +1007,7 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -1084,7 +1084,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -1105,7 +1105,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -1150,7 +1150,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -1189,7 +1189,7 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -1249,7 +1249,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -1270,7 +1270,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -1309,7 +1309,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -1328,7 +1328,7 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -1403,7 +1403,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -1424,7 +1424,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -1475,7 +1475,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -1514,7 +1514,7 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -1586,7 +1586,7 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -1607,7 +1607,7 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -1664,7 +1664,7 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -1683,7 +1683,7 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -1786,7 +1786,7 @@ Use this endpoint to create a buy crypto quote and lock rate/amounts for a short
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -1807,7 +1807,7 @@ Use this endpoint to create a buy crypto quote and lock rate/amounts for a short
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -1888,7 +1888,7 @@ Use this endpoint to create a buy crypto quote and lock rate/amounts for a short
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -2007,7 +2007,7 @@ Use this endpoint to create a buy crypto quote and lock rate/amounts for a short
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -2134,7 +2134,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -2155,7 +2155,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -2224,7 +2224,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -2453,7 +2453,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -2556,7 +2556,7 @@ Use this endpoint to create a sell crypto quote and lock rate/amounts for sell f
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -2577,7 +2577,7 @@ Use this endpoint to create a sell crypto quote and lock rate/amounts for sell f
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -2652,7 +2652,7 @@ Use this endpoint to create a sell crypto quote and lock rate/amounts for sell f
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -2776,7 +2776,7 @@ Use this endpoint to create a sell crypto quote and lock rate/amounts for sell f
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -2897,7 +2897,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -2918,7 +2918,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -2987,7 +2987,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -3191,7 +3191,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -3303,7 +3303,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -3324,7 +3324,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -3459,7 +3459,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -3678,7 +3678,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -3758,7 +3758,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -3779,7 +3779,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -3830,7 +3830,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -3864,7 +3864,7 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -3957,7 +3957,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -3978,7 +3978,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -4047,7 +4047,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -4151,7 +4151,7 @@ Use this endpoint to create a conversion quote between internal balance assets. 
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
@@ -4262,7 +4262,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 }
 ```
 
-### Headers
+**Headers**
 
 <table width="100%">
   <thead>
@@ -4283,7 +4283,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
   </tbody>
 </table>
 
-### Request
+**Request**
 
 <table width="100%">
   <thead>
@@ -4352,7 +4352,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
   </tbody>
 </table>
 
-### Response
+**Response**
 
 <table width="100%">
   <thead>
@@ -4531,7 +4531,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
   </tbody>
 </table>
 
-### Errors
+**Errors**
 
 <table width="100%">
   <thead>
