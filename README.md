@@ -13,7 +13,7 @@ Base data endpoints are used before any wallet operation. They help the merchant
 
 Use this endpoint to retrieve all fiat and crypto assets available for custodial wallet operations. Use the response to build asset selectors and validate supported routes before any operation.
 
-**POST** `/api/v2/exchange/merchant/assets?destination=SDK_ACCOUNTING`
+**POST** `/api/v2/exchange/merchant/assets?destination=EXCHANGE`
 
 **Headers**
  - `x-api-key: {{x-api-key}}`
@@ -252,7 +252,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   "clientId": "{{clientId}}",
   "fiatAsset": "BYN",
   "orderType": "BUY",
-  "destination": "SDK_ACCOUNTING"
+  "destination": "EXCHANGE"
 }
 ```
 
@@ -809,7 +809,10 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 
 ```json
 {
-  "quoteId": "47b2985a-2fe3-427c-9a18-6b16736c460e"
+  "quoteId": "47b2985a-2fe3-427c-9a18-6b16736c460e",
+  "destination": "EXCHANGE",
+  "returnUrl": "https://google.com",
+  "failUrl": "https://google.com"
 }
 ```
 
@@ -1089,7 +1092,10 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 
 ```json
 {
-  "quoteId": "a95bf590-c029-47b2-bf95-adbcf50a11bb"
+  "quoteId": "47b2985a-2fe3-427c-9a18-6b16736c460e",
+  "destination": "EXCHANGE",
+  "returnUrl": "https://google.com",
+  "failUrl": "https://google.com"
 }
 ```
 
@@ -1585,7 +1591,10 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 
 ```json
 {
-  "quoteId": "601b24b6-c7c3-4205-8396-79903f76f25e"
+  "quoteId": "47b2985a-2fe3-427c-9a18-6b16736c460e",
+  "destination": "EXCHANGE",
+  "returnUrl": "https://google.com",
+  "failUrl": "https://google.com"
 }
 ```
 
