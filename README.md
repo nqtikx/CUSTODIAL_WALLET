@@ -5,11 +5,11 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 > BASE_URL https://api.dev.wbdevel.net
 
-## 0) Wallet Base Data
+## 1) Base Data
 
 Base data endpoints are used before any wallet operation. They help the merchant show available assets, current operations, and account balances to the client.
 
-### Step 0.1 Get available assets
+### Step 1.1 Get available assets
 
 Use this endpoint to retrieve all fiat and crypto assets available for custodial wallet operations. Use the response to build asset selectors and validate supported routes before any operation.
 
@@ -40,19 +40,19 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `destination` | `string` | No | Flow destination filter. Use `SDK_ACCOUNTING` for custodial wallet operations. |
+| --- | --- | --- | --- |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `fiatAssets` | `array of objects` | List of fiat assets that can be shown to the client as available wallet currencies for this merchant flow. |
 | `fiatAssets[].id` | `string` | Internal asset identifier used in API requests and routing logic. |
 | `fiatAssets[].code` | `string` | Currency code that can be displayed to the client in UI. |
@@ -65,14 +65,14 @@ Use this endpoint to retrieve all fiat and crypto assets available for custodial
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_DESTINATION` | BUSINESS | `destination` value cannot be mapped to supported enum for merchant assets. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant is authenticated but does not have `ASSET_API` permission. |
-| `429 Too Many Requests` | HTTP | Rate limit is exceeded for this endpoint. |
+| --- | --- | --- |
+| `400 INVALID_DESTINATION` | `BUSINESS` | `destination` value cannot be mapped to supported enum for merchant assets. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
+| `429 Too Many Requests` | `HTTP` | Rate limit is exceeded for this endpoint. |
 
 
-### Step 0.2 Get current balance operations
+### Step 1.2 Get current balance operations
 
 Use this endpoint to fetch the client's current fiat and crypto wallet operations and statuses. Use the response to show live operation state in UI and support dashboards.
 
@@ -121,56 +121,56 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `fiatOperations` | `array of objects` | Current fiat wallet operations. |
 | `cryptoOperations` | `array of objects` | Current crypto wallet operations. |
 | `fiatOperations[].number` | `number` | Human-readable fiat operation number. |
-| `fiatOperations[].accountType` | `string` | Fiat operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
-| `fiatOperations[].operationType` | `string` | Fiat operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| <nobr>`fiatOperations[].accountType`</nobr> | `string` | Fiat operation account scope. Value: `WALLET`. |
+| <nobr>`fiatOperations[].operationType`</nobr> | `string` | Fiat operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
 | `fiatOperations[].amount` | `number` | Fiat operation amount in fiat asset currency. |
-| `fiatOperations[].transactionId` | `string` | Internal fiat transaction identifier. |
+| <nobr>`fiatOperations[].transactionId`</nobr> | `string` | Internal fiat transaction identifier. |
 | `fiatOperations[].asset` | `string` | Fiat asset code of the operation. |
 | `fiatOperations[].status` | `string` | Fiat transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `REJECTED`, `TIMEOUT`, `DECLINED`, `INVALID_AMOUNT`, `ERROR`, `AML_BLOCKED`, `PENDING`, `PROCESSING`, `APPROVED`. |
-| `fiatOperations[].fiatProvider` | `string` | Fiat provider used by the fiat operation. |
-| `fiatOperations[].orderIdentity` | `string` | Provider-side order reference used for support/reconciliation. |
+| <nobr>`fiatOperations[].fiatProvider`</nobr> | `string` | Fiat provider used by the fiat operation. |
+| <nobr>`fiatOperations[].orderIdentity`</nobr> | `string` | Provider-side order reference used for support/reconciliation. |
 | `fiatOperations[].createdAt` | `string` | Fiat operation creation date/time. |
 | `cryptoOperations[].number` | `number` | Human-readable crypto operation number. |
-| `cryptoOperations[].accountType` | `string` | Crypto operation account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. |
-| `cryptoOperations[].operationType` | `string` | Crypto operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
+| <nobr>`cryptoOperations[].accountType`</nobr> | `string` | Crypto operation account scope. Value: `WALLET`. |
+| <nobr>`cryptoOperations[].operationType`</nobr> | `string` | Crypto operation type, for example `DEPOSIT` or `WITHDRAWAL`. |
 | `cryptoOperations[].amount` | `number` | Crypto operation amount in crypto asset units. |
-| `cryptoOperations[].transactionId` | `string` | Internal crypto transaction identifier. |
+| <nobr>`cryptoOperations[].transactionId`</nobr> | `string` | Internal crypto transaction identifier. |
 | `cryptoOperations[].asset` | `string` | Crypto asset code of the operation. |
 | `cryptoOperations[].status` | `string` | Crypto transaction status. Allowed values: `NEW`, `PENDING_REVIEW`, `NOT_FOUND`, `REJECTED`, `TIMEOUT`, `INVALID_AMOUNT`, `ERROR`, `AML_ERROR`, `AML_BLOCKED`, `ARREST`, `SUBMITTING`, `SUBMITTED`, `PENDING`, `SELECTED`, `CONFIRMED`, `PENDING_RESOLVE`. |
-| `cryptoOperations[].submitTimeout` | `string` | Crypto deposit timeout policy/mode. |
-| `cryptoOperations[].depositCryptoAddress` | `string` | Blockchain address where client sends funds for crypto deposit. |
+| <nobr>`cryptoOperations[].submitTimeout`</nobr> | `string` | Crypto deposit timeout policy/mode. |
+| <nobr>`cryptoOperations[].depositCryptoAddress`</nobr> | `string` | Blockchain address where client sends funds for crypto deposit. |
 | `cryptoOperations[].network` | `string` | Blockchain network of the crypto operation. |
-| `cryptoOperations[].txHash` | `string/null` | Blockchain transaction hash after transfer is detected. |
+| `cryptoOperations[].txHash` | `string \| null` | Blockchain transaction hash after transfer is detected. |
 | `cryptoOperations[].createdAt` | `string` | Crypto operation creation date/time. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to the merchant in access validation. |
-| `400 Bad Request` | HTTP | Request parameters are invalid or cannot be parsed. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no permission for this client or endpoint. |
+| --- | --- | --- |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to the merchant in access validation. |
+| `400 Bad Request` | `HTTP` | Request parameters are invalid or cannot be parsed. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this client or endpoint. |
 
-## 1) Deposit (`deposit`)
+## 2) Deposit (`deposit`)
 
-### Step 1.1 Create crypto deposit
+### Step 2.1 Create crypto deposit
 
 Use this endpoint to create a crypto deposit operation and generate a destination address. Use the response to provide deposit instructions and track the operation by transaction id.
 
@@ -205,38 +205,38 @@ Use this endpoint to create a crypto deposit operation and generate a destinatio
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
-| `asset.code` | `string` | Yes | Asset code used for the operation. |
-| `asset.network` | `string` | Yes | Blockchain network of the selected crypto asset. |
-| `asset.amount` | `number` | Yes | Operation amount in the selected asset. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | `Yes` | Account scope. Use `WALLET` for custodial wallet flow. |
+| `asset.code` | `string` | `Yes` | Asset code used for the operation. |
+| `asset.network` | `string` | `Yes` | Blockchain network of the selected crypto asset. |
+| `asset.amount` | `number` | `Yes` | Operation amount in the selected asset. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `transactionId` | `string` | Transaction identifier for tracking operation status, support cases, and reconciliation. |
-| `depositCryptoAddress` | `string` | Blockchain address that must be shown to the client as the destination for crypto deposit. |
+| <nobr>`depositCryptoAddress`</nobr> | `string` | Blockchain address that must be shown to the client as the destination for crypto deposit. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 ACTIVE_DEPOSIT_REQUEST_FOUND` | BUSINESS | An uncompleted deposit already exists for this client/asset. |
-| `400 INVALID_AMOUNT` | BUSINESS | Provided amount is invalid for deposit constraints. |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to the merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no permission for this operation. |
+| --- | --- | --- |
+| <nobr>`400 ACTIVE_DEPOSIT_REQUEST_FOUND`</nobr> | `BUSINESS` | An uncompleted deposit already exists for this client/asset. |
+| `400 INVALID_AMOUNT` | `BUSINESS` | Provided amount is invalid for deposit constraints. |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to the merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-### Step 1.2 Get fiat payment methods
+### Step 2.2 Get fiat payment methods
 
 Use this endpoint to retrieve available fiat payment methods for the selected client and flow. Use the response to select a valid payment token for deposit or withdrawal requests.
 
@@ -277,50 +277,59 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `fiatAsset` | `string` | No | Fiat currency filter, for example `BYN`. |
-| `orderType` | `string` | No | Operation type filter, for example `BUY` for fiat input. |
-| `destination` | `string` | No | Flow destination filter. Use `SDK_ACCOUNTING` for custodial wallet operations. |
-| `providers` | `array of strings` | No | Optional list of allowed fiat providers. |
-| `isCrypto` | `boolean` | No | Optional filter for crypto-related payment methods. |
-| `countryGroup` | `string` | No | Optional country group filter. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `fiatAsset` | `string` | `No` | Fiat currency filter, for example `BYN`. |
+| `orderType` | `string` | `No` | Operation type filter. Allowed values: `BUY` (fiat input), `SELL` (fiat output). |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `providers` | `array of strings` | `No` | Optional list of allowed fiat providers. |
+| `isCrypto` | `boolean` | `No` | Optional filter for crypto-related payment methods. |
+| `countryGroup` | `string` | `No` | Optional country group filter. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Payment method token. Pass this value as `paymentToken` in fiat deposit/withdrawal or fiat-provider quote requests. |
 | `number` | `string` | Masked payment method number shown to client. |
 | `brand` | `string` | Payment method brand, for example `VISA`. |
-| `providerId` | `string` | Provider identifier. |
-| `providerType` | `string` | Provider type, for example `ASSIST`. |
-| `status` | `string` | Payment method status. Allowed values: `ENABLED`, `DIRECTION_DISABLED`, `CURRENCY_DISABLED`. |
+| `providerId` | `string` | Provider identifier (canonical, use this value). Examples: `ASSIST`, `CA`, `MTS`. |
+| `providerType` | `string` | Deprecated. Duplicates `providerId` for backward compatibility; will be removed. |
+| `status` | `string` | Payment method status. Allowed values: `ENABLED`, `DIRECTION_DISABLED`, `CURRENCY_DISABLED`, `UNKNOWN`. See status descriptions below. |
 | `isRestricted` | `boolean` | Shows whether this payment method is restricted. |
 | `isCrypto` | `boolean` | Shows whether method is crypto-related. |
 | `country` | `string` | Payment method country. |
 | `currency` | `string` | Primary fiat currency. |
-| `supportedCurrencies` | `array of strings` | Fiat currencies supported by this payment method. |
+| <nobr>`supportedCurrencies`</nobr> | `array of strings` | Fiat currencies supported by this payment method. |
+
+#### Payment method `status` values
+
+| Value | Description |
+| --- | --- |
+| `ENABLED` | Payment method is available for the requested direction and currency. |
+| `DIRECTION_DISABLED` | Provider has no route for the requested `orderType` (`BUY`/`SELL`). |
+| `CURRENCY_DISABLED` | Direction is supported, but `fiatAsset` is not in `supportedCurrencies` of the route. |
+| `UNKNOWN` | `orderType` or `fiatAsset` was not provided in the request and the status cannot be resolved. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to the merchant. |
-| `400 INVALID_ORDER_TYPE` | BUSINESS | `orderType` value is unsupported for payment method resolution. |
-| `400 INVALID_FIAT_ASSET` | BUSINESS | `fiatAsset` value is unsupported for the selected flow. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no `PAYMENT_API` permission for this client. |
-| `429 Too Many Requests` | HTTP | Rate limit is exceeded for payment methods endpoint. |
+| --- | --- | --- |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to the merchant. |
+| `400 INVALID_ORDER_TYPE` | `BUSINESS` | `orderType` value is unsupported for payment method resolution. |
+| `400 INVALID_FIAT_ASSET` | `BUSINESS` | `fiatAsset` value is unsupported for the selected flow. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
+| `429 Too Many Requests` | `HTTP` | Rate limit is exceeded for payment methods endpoint. |
 
 
-### Step 1.3 Create fiat deposit
+### Step 2.3 Create fiat deposit
 
 Use this endpoint to initiate a fiat deposit through a selected payment provider. Use the response to redirect the client to provider payment flow or render payment details.
 
@@ -361,46 +370,46 @@ Use this endpoint to initiate a fiat deposit through a selected payment provider
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
-| `fiatProviderType` | `string` | Yes | Fiat provider code for payment/payout processing. |
-| `paymentToken` | `string` | Conditional | Payment method token used for fiat-provider operations. |
-| `internalToken` | `string` | Conditional | Internal payment token used for provider-specific routing when applicable. |
-| `asset.code` | `string` | Yes | Asset code used for the operation. |
-| `asset.amount` | `number` | Yes | Operation amount in the selected asset. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | `Yes` | Account scope. Use `WALLET` for custodial wallet flow. |
+| <nobr>`fiatProviderType`</nobr> | `string` | `Yes` | Fiat provider code for payment/payout processing. |
+| `paymentToken` | `string` | `Conditional` | Payment method token used for fiat-provider operations. |
+| `internalToken` | `string` | `Conditional` | Internal payment token used for provider-specific routing when applicable. |
+| `asset.code` | `string` | `Yes` | Asset code used for the operation. |
+| `asset.amount` | `number` | `Yes` | Operation amount in the selected asset. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `fiatPaymentLink` | `string` | Payment URL that client should open to complete fiat deposit. |
 | `creationDate` | `string` | Creation timestamp in server date-time format. |
 | `expirationMinutes` | `number` | Payment link lifetime in minutes. |
 | `paymentDetails` | `object` | Provider-specific payment data. |
-| `paymentDetails.paymentLink` | `string` | Provider payment URL. |
-| `paymentDetails.notificationPhoneNumber` | `string/null` | Phone number returned by provider when the payment scenario requires notification or additional confirmation. |
+| <nobr>`paymentDetails.paymentLink`</nobr> | `string` | Provider payment URL. |
+| <nobr>`paymentDetails.notificationPhoneNumber`</nobr> | `string \| null` | Phone number returned by provider when the payment scenario requires notification or additional confirmation. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 BALANCE_OPERATION_PROCESSING_ERROR` | BUSINESS | Fiat provider operation cannot be started or processed. |
-| `400 INVALID_PAYMENT_TOKEN` | BUSINESS | `paymentToken`/`internalToken` is invalid, restricted, or missing. |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no permission for this operation. |
+| --- | --- | --- |
+| <nobr>`400 BALANCE_OPERATION_PROCESSING_ERROR`</nobr> | `BUSINESS` | Fiat provider operation cannot be started or processed. |
+| `400 INVALID_PAYMENT_TOKEN` | `BUSINESS` | `paymentToken`/`internalToken` is invalid, restricted, or missing. |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-## 2) Send (`withdrawal`)
+## 3) Send (`withdrawal`)
 
-### Step 2.1 Calculate crypto withdrawal
+### Step 3.1 Calculate crypto withdrawal
 
 Use this endpoint to calculate crypto withdrawal fees and net payout before submission. Use the response to show final amounts and keep the calculation id for withdrawal creation.
 
@@ -438,23 +447,23 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `asset.amount` | `number` | Yes | Operation amount in the selected asset. |
-| `asset.code` | `string` | Yes | Asset code used for the operation. |
-| `asset.network` | `string` | Yes | Blockchain network of the selected crypto asset. |
-| `toAddress` | `string` | Yes | Destination crypto address. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `asset.amount` | `number` | `Yes` | Operation amount in the selected asset. |
+| `asset.code` | `string` | `Yes` | Asset code used for the operation. |
+| `asset.network` | `string` | `Yes` | Blockchain network of the selected crypto asset. |
+| `toAddress` | `string` | `Yes` | Destination crypto address. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Calculation id used to create withdrawal. |
 | `withdrawalAmount` | `string` | Original withdrawal amount. |
 | `commissionAmount` | `string` | Commission amount for the operation. |
@@ -464,15 +473,15 @@ Use this endpoint to calculate crypto withdrawal fees and net payout before subm
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_ADDRESS` | BUSINESS | Destination address is invalid for selected network or blocked as internal address. |
-| `400 INVALID_AMOUNT` | BUSINESS | Amount is invalid (including fee greater than withdrawal amount). |
-| `400 ACTIVE_WITHDRAWAL_REQUEST_FOUND` | BUSINESS | An uncompleted withdrawal already exists for this client/asset. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no permission for this operation. |
+| --- | --- | --- |
+| `400 INVALID_ADDRESS` | `BUSINESS` | Destination address is invalid for selected network or blocked as internal address. |
+| `400 INVALID_AMOUNT` | `BUSINESS` | Amount is invalid (including fee greater than withdrawal amount). |
+| <nobr>`400 ACTIVE_WITHDRAWAL_REQUEST_FOUND`</nobr> | `BUSINESS` | An uncompleted withdrawal already exists for this client/asset. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-### Step 2.2 Create crypto withdrawal
+### Step 3.2 Create crypto withdrawal
 
 Use this endpoint to create a crypto withdrawal using a valid calculation context. Use the response to store transaction id and monitor withdrawal lifecycle.
 
@@ -495,36 +504,36 @@ Use this endpoint to create a crypto withdrawal using a valid calculation contex
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
-| `calculationId` | `string` | Yes | Calculation id returned by withdrawal calculation endpoint. |
-| `comment` | `string` | No | Optional memo/comment/tag for networks that require additional destination data. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | `Yes` | Account scope. Use `WALLET` for custodial wallet flow. |
+| `calculationId` | `string` | `Yes` | Calculation id returned by withdrawal calculation endpoint. |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `transactionId` | `string` | Created crypto withdrawal transaction identifier used for tracking status and support. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_CALCULATION` | BUSINESS | `calculationId` is not found or expired. |
-| `400 INVALID_STATUS` | BUSINESS | Withdrawal operation status does not allow execution. |
-| `400 ACTIVE_WITHDRAWAL_REQUEST_FOUND` | BUSINESS | Another uncompleted withdrawal blocks this operation. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Operation is forbidden for this merchant (`AccessDeniedException`). |
+| --- | --- | --- |
+| `400 INVALID_CALCULATION` | `BUSINESS` | `calculationId` is not found or expired. |
+| `400 INVALID_STATUS` | `BUSINESS` | Withdrawal operation status does not allow execution. |
+| <nobr>`400 ACTIVE_WITHDRAWAL_REQUEST_FOUND`</nobr> | `BUSINESS` | Another uncompleted withdrawal blocks this operation. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-### Step 2.3 Calculate fiat withdrawal
+### Step 3.3 Calculate fiat withdrawal
 
 Use this endpoint to calculate fiat withdrawal commission and expected payout amount. Use the response to confirm final withdrawal values with the client.
 
@@ -562,42 +571,42 @@ Use this endpoint to calculate fiat withdrawal commission and expected payout am
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `fiatProviderType` | `string` | Yes | Fiat provider code for payment/payout processing. |
-| `paymentToken` | `string` | Conditional | Payment method token used for fiat-provider operations. |
-| `internalToken` | `string` | Conditional | Internal payment token used for provider-specific routing when applicable. |
-| `asset.code` | `string` | Yes | Asset code used for the operation. |
-| `asset.amount` | `number` | Yes | Operation amount in the selected asset. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| <nobr>`fiatProviderType`</nobr> | `string` | `Yes` | Fiat provider code for payment/payout processing. |
+| `paymentToken` | `string` | `Conditional` | Payment method token used for fiat-provider operations. |
+| `internalToken` | `string` | `Conditional` | Internal payment token used for provider-specific routing when applicable. |
+| `asset.code` | `string` | `Yes` | Asset code used for the operation. |
+| `asset.amount` | `number` | `Yes` | Operation amount in the selected asset. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
-| `id` | `string/null` | Calculation identifier when provider creates a reusable calculation. Can be `null` when the fiat calculation is direct and no follow-up calculation id is required. |
+| --- | --- | --- |
+| `id` | `string \| null` | Calculation identifier when provider creates a reusable calculation. Can be `null` when the fiat calculation is direct and no follow-up calculation id is required. |
 | `withdrawalAmount` | `string` | Amount requested for withdrawal. |
 | `commissionAmount` | `string` | Commission amount for the operation. |
 | `receivedAmount` | `string` | Net amount expected after fees/commissions. |
-| `expirationDate` | `string/null` | Expiration timestamp in server date-time format, if returned. |
+| `expirationDate` | `string \| null` | Expiration timestamp in server date-time format, if returned. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 BALANCE_OPERATION_PROCESSING_ERROR` | BUSINESS | Fiat withdrawal calculation cannot be produced by provider/flow. |
-| `400 INVALID_PAYMENT_TOKEN` | BUSINESS | Payment token is invalid, unavailable, or unsupported. |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no permission for this operation. |
+| --- | --- | --- |
+| <nobr>`400 BALANCE_OPERATION_PROCESSING_ERROR`</nobr> | `BUSINESS` | Fiat withdrawal calculation cannot be produced by provider/flow. |
+| `400 INVALID_PAYMENT_TOKEN` | `BUSINESS` | Payment token is invalid, unavailable, or unsupported. |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-### Step 2.4 Create fiat withdrawal
+### Step 3.4 Create fiat withdrawal
 
 Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use the response to persist transaction id and track provider payout status.
 
@@ -632,43 +641,43 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `accountType` | `string` | Yes | Account scope. Allowed values: `WALLET`, `TRADING`, `BROKER`. Use `WALLET` for custodial wallet flow. |
-| `fiatProviderType` | `string` | Yes | Fiat provider code for payment/payout processing. |
-| `paymentToken` | `string` | Conditional | Payment method token used for fiat-provider operations. |
-| `internalToken` | `string` | Conditional | Internal payment token used for provider-specific routing when applicable. |
-| `asset.code` | `string` | Yes | Asset code used for the operation. |
-| `asset.amount` | `number` | Yes | Operation amount in the selected asset. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `accountType` | `string` | `Yes` | Account scope. Use `WALLET` for custodial wallet flow. |
+| <nobr>`fiatProviderType`</nobr> | `string` | `Yes` | Fiat provider code for payment/payout processing. |
+| `paymentToken` | `string` | `Conditional` | Payment method token used for fiat-provider operations. |
+| `internalToken` | `string` | `Conditional` | Internal payment token used for provider-specific routing when applicable. |
+| `asset.code` | `string` | `Yes` | Asset code used for the operation. |
+| `asset.amount` | `number` | `Yes` | Operation amount in the selected asset. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `transactionId` | `string` | Created fiat withdrawal transaction identifier used for tracking payout status and reconciliation. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 BALANCE_OPERATION_PROCESSING_ERROR` | BUSINESS | Fiat withdrawal cannot be started or provider rejected operation. |
-| `400 INVALID_PAYMENT_TOKEN` | BUSINESS | Payment token/internal token is invalid or restricted. |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Operation is forbidden for this merchant (`AccessDeniedException`). |
+| --- | --- | --- |
+| <nobr>`400 BALANCE_OPERATION_PROCESSING_ERROR`</nobr> | `BUSINESS` | Fiat withdrawal cannot be started or provider rejected operation. |
+| `400 INVALID_PAYMENT_TOKEN` | `BUSINESS` | Payment token/internal token is invalid or restricted. |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-## 3) Buy (`buy`)
+## 4) OnRamp (fiat -> crypto)
 
-Buy flow is used when the client pays fiat through a provider and receives crypto to internal wallet balance. The flow is quote first, then order creation.
+OnRamp flow is used when the client pays fiat through a provider and receives crypto to internal wallet balance. The flow is quote first, then order creation.
 
-### Step 3.1 Create quote
+### Step 4.1 Create quote
 
 Use this endpoint to create a buy quote and lock rate/amounts for a short time. Use the response to display final buy terms and pass quote id to order creation.
 
@@ -730,29 +739,31 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` | `string` | Yes | Source asset code. |
-| `input.amount` | `number` | Conditional | Source amount for quote/order calculation. |
-| `input.provider` | `string` | Yes | Fiat provider used for payment. |
-| `input.token` | `string` | Conditional | Payment token used for provider payment. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `output.asset` | `string` | Yes | Destination asset code. |
-| `output.amount` | `number` | Conditional | Destination amount for quote/order calculation. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `input.type` | `string` | `Yes` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | `Yes` | Source asset code. |
+| `input.amount` | `number` | `Conditional` | Source amount for quote/order calculation. |
+| `input.provider` | `string` | `Yes` | Fiat provider used for payment. |
+| `input.token` | `string` | `Conditional` | Payment token used for provider payment. |
+| `output.type` | `string` | `Yes` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | `Yes` | Destination asset code. |
+| `output.amount` | `number` | `Conditional` | Destination amount for quote/order calculation. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Quote id used to create order. |
-| `rate` | `string` | Rate pair for the operation. |
+| `rate` | `string` | Rate pair for the operation. Display this value to the client as the final pair label. |
 | `systemRateValue` | `string` | Base system rate at calculation time. |
 | `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
 | `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
@@ -764,9 +775,9 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 | `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Source asset code. |
 | `input.amount` | `string` | Source amount used in quote calculation. |
-| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
-| `input.provider` | `string/null` | Fiat provider code for source leg when source type is `FIAT_PROVIDER`. |
-| `input.token` | `string/null` | Payment token used by provider source leg, if required by provider flow. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
+| `input.provider` | `string \| null` | Fiat provider code for source leg when source type is `FIAT_PROVIDER`. |
+| `input.token` | `string \| null` | Payment token used by provider source leg, if required by provider flow. |
 | `input.paymentType` | `string` | Fiat payment type selected by provider configuration. |
 | `input.processingBank` | `string` | Processing bank selected for fiat provider route. |
 | `output.type` | `string` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
@@ -776,16 +787,16 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_QUOTE` | BUSINESS | Quote input is inconsistent or cannot be calculated for provided payment details. |
-| `400 CURRENCY_NOT_FOUND` | BUSINESS | One of input/output assets is unknown. |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Provided client id is invalid or not linked to merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no `ORDER_V2_API` permission. |
-| `429 Too Many Requests` | HTTP | Rate limit is exceeded for quote creation endpoint. |
+| --- | --- | --- |
+| `400 INVALID_QUOTE` | `BUSINESS` | Quote input is inconsistent or cannot be calculated for provided payment details. |
+| `400 CURRENCY_NOT_FOUND` | `BUSINESS` | One of input/output assets is unknown. |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Provided client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
+| `429 Too Many Requests` | `HTTP` | Rate limit is exceeded for quote creation endpoint. |
 
 
-### Step 3.2 Create buy order
+### Step 4.2 Create buy order
 
 Use this endpoint to create a buy order from a valid non-expired quote. Use the response to track order execution and render provider/payment metadata.
 
@@ -867,81 +878,89 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote identifier returned by quote creation; required to create an order before quote expiration. |
+| --- | --- | --- | --- |
+| `quoteId` | `string` | `Yes` | Quote identifier returned by quote creation; required to create an order before quote expiration. |
+| <nobr>`destinationCryptoAddress`</nobr> | `string` | `No` | Destination wallet address for crypto-out flows (used when `output.type` is `CRYPTO_TRANSFER`). |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
+| `bankIdentifier` | `string` | `No` | Optional bank identifier used by selected fiat provider route. |
+| `returnUrl` | `string` | `No` | URL the client should be redirected to on successful payment flow. |
+| `failUrl` | `string` | `No` | URL the client should be redirected to on failed payment flow. |
+| `additionalTimeout` | `boolean` | `No` | Extended-timeout flag for slow payment flows. |
+| <nobr>`outputPaymentProcessingType`</nobr> | `string` | `No` | Optional payment processing type for the output leg. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Order id. |
 | `number` | `number` | Human-readable order number. |
 | `conditions` | `object` | Detailed order/quote calculation breakdown. |
 | `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
+| <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
+| <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
-| `recalculationReason` | `string/null` | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
+| `recalculationReason` | `string \| null` | Recalculation reason when quote/order amounts were adjusted by system logic; `null` when no recalculation happened. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
-| `completionDate` | `string/null` | Order completion timestamp when order is finished; `null` while order is still active. |
+| `failureMessage` | `string \| null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
+| `completionDate` | `string \| null` | Order completion timestamp when order is finished; `null` while order is still active. |
 | `creationDate` | `string` | Creation timestamp in server date-time format. |
-| `sessionId` | `string/null` | Optional client session identifier bound to this order. |
+| `sessionId` | `string \| null` | Optional client session identifier bound to this order. |
 | `input` | `object` | Source operation details object. |
 | `output` | `object` | Destination operation details object. |
 | `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
-| `input.expirationDate` / `output.expirationDate` | `string/null` | Expiration timestamp for operation leg context, if provided. |
-| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
-| `input.clientBank` / `output.clientBank` | `string/null` | Client bank metadata if returned by provider route. |
-| `input.fromToken` / `output.fromToken` | `string/null` | Source payment token used by provider leg. |
-| `input.toToken` / `output.toToken` | `string/null` | Destination payment token used by provider leg. |
-| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
-| `input.processorTransactionNumber` / `output.processorTransactionNumber` | `string/null` | External provider transaction number/reference shown by provider systems for support and reconciliation. |
-| `input.post` / `output.post` | `string/null` | Additional provider payload or form-POST metadata when present. |
-| `input.paymentSystem` / `output.paymentSystem` | `string/null` | Payment system metadata returned by provider integration. |
+| <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
+| <nobr>`input.expirationDate`</nobr> / <nobr>`output.expirationDate`</nobr> | `string \| null` | Expiration timestamp for operation leg context, if provided. |
+| `input.provider` / `output.provider` | `string \| null` | Provider code for fiat-provider operation leg. |
+| <nobr>`input.paymentType`</nobr> / <nobr>`output.paymentType`</nobr> | `string \| null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| <nobr>`input.processingBank`</nobr> / <nobr>`output.processingBank`</nobr> | `string \| null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.clientBank` / `output.clientBank` | `string \| null` | Client bank metadata if returned by provider route. |
+| `input.fromToken` / `output.fromToken` | `string \| null` | Source payment token used by provider leg. |
+| `input.toToken` / `output.toToken` | `string \| null` | Destination payment token used by provider leg. |
+| `input.link` / `output.link` | `string \| null` | Provider payment URL for redirect/confirmation flows. |
+| <nobr>`input.processorTransactionId`</nobr> / <nobr>`output.processorTransactionId`</nobr> | `string \| null` | External provider transaction id for reconciliation. |
+| <nobr>`input.processorTransactionNumber`</nobr> / <nobr>`output.processorTransactionNumber`</nobr> | `string \| null` | External provider transaction number/reference shown by provider systems for support and reconciliation. |
+| `input.post` / `output.post` | `string \| null` | Additional provider payload or form-POST metadata when present. |
+| <nobr>`input.paymentSystem`</nobr> / <nobr>`output.paymentSystem`</nobr> | `string \| null` | Payment system metadata returned by provider integration. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 QUOTE_NOT_FOUND` | BUSINESS | Quote id is missing, expired, or unknown. |
-| `400 INVALID_QUOTE` | BUSINESS | Quote exists but cannot be used for order creation. |
-| `400 INVALID_CLIENT_STATUS` | BUSINESS | Client status/checks do not allow order creation (for example testing not completed). |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no access to quote/client used by this order. |
+| --- | --- | --- |
+| `400 QUOTE_NOT_FOUND` | `BUSINESS` | Quote id is missing, expired, or unknown. |
+| `400 INVALID_QUOTE` | `BUSINESS` | Quote exists but cannot be used for order creation. |
+| <nobr>`400 INVALID_CLIENT_STATUS`</nobr> | `BUSINESS` | Client status/checks do not allow order creation (for example testing not completed). |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no access to quote/client used by this order. |
 
 
-## 4) Sell (`sell`) - Merchant V3 Flow
+## 5) OffRamp (crypto -> fiat)
 
-Sell flow is used when the client sells crypto from internal wallet balance and receives fiat through a provider.
+OffRamp flow is used when the client sells crypto from internal wallet balance and receives fiat through a provider.
 
-### Step 4.1 Create quote
+### Step 5.1 Create quote
 
-Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Use the response to show sell terms and pass quote id to order creation.
+Use this endpoint to create a sell quote and lock rate/amounts for OffRamp flow. Use the response to show sell terms and pass quote id to order creation.
 
 **POST** `/api/v3/exchange/merchant/quote`
 
@@ -1001,28 +1020,30 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` | `string` | Yes | Source asset code. |
-| `input.amount` | `number` | Conditional | Source amount for quote/order calculation. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `output.asset` | `string` | Yes | Destination asset code. |
-| `output.provider` | `string` | Yes | Fiat provider. |
-| `output.token` | `string` | Conditional | Payment token for receiving fiat. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `input.type` | `string` | `Yes` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | `Yes` | Source asset code. |
+| `input.amount` | `number` | `Conditional` | Source amount for quote/order calculation. |
+| `output.type` | `string` | `Yes` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | `Yes` | Destination asset code. |
+| `output.provider` | `string` | `Yes` | Fiat provider. |
+| `output.token` | `string` | `Conditional` | Payment token for receiving fiat. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Quote id used for order creation. |
-| `rate` | `string` | Rate pair for the operation. |
+| `rate` | `string` | Rate pair for the operation. Display this value to the client as the final pair label. |
 | `systemRateValue` | `string` | Base system rate at calculation time. |
 | `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
 | `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
@@ -1039,23 +1060,23 @@ Use this endpoint to create a sell quote and lock rate/amounts for sell flow. Us
 | `output.asset` | `string` | Destination asset code. |
 | `output.amount` | `string` | Destination amount for quote/order calculation. |
 | `output.feeAmount` | `string` | Fiat provider/exchange fee amount. |
-| `output.provider` | `string/null` | Fiat provider code for destination leg when destination type is `FIAT_PROVIDER`. |
-| `output.token` | `string/null` | Payment token used by provider destination leg, if required by provider flow. |
+| `output.provider` | `string \| null` | Fiat provider code for destination leg when destination type is `FIAT_PROVIDER`. |
+| `output.token` | `string \| null` | Payment token used by provider destination leg, if required by provider flow. |
 | `output.paymentType` | `string` | Fiat payment type. |
-| `output.processingBank` | `string` | Processing bank selected by provider route. |
+| <nobr>`output.processingBank`</nobr> | `string` | Processing bank selected by provider route. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_QUOTE` | BUSINESS | Quote input is inconsistent or cannot be calculated. |
-| `400 CURRENCY_NOT_FOUND` | BUSINESS | Input/output asset is unknown. |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Client id is invalid or not linked to merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no `ORDER_V2_API` permission. |
+| --- | --- | --- |
+| `400 INVALID_QUOTE` | `BUSINESS` | Quote input is inconsistent or cannot be calculated. |
+| `400 CURRENCY_NOT_FOUND` | `BUSINESS` | Input/output asset is unknown. |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Client id is invalid or not linked to merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-### Step 4.2 Create sell order
+### Step 5.2 Create sell order
 
 Use this endpoint to create a sell order from a valid non-expired quote. Use the response to track order progress and payout operation details.
 
@@ -1136,74 +1157,82 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote identifier returned by quote creation; required to create an order before quote expiration. |
+| --- | --- | --- | --- |
+| `quoteId` | `string` | `Yes` | Quote identifier returned by quote creation; required to create an order before quote expiration. |
+| <nobr>`destinationCryptoAddress`</nobr> | `string` | `No` | Destination wallet address for crypto-out flows (used when `output.type` is `CRYPTO_TRANSFER`). |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
+| `bankIdentifier` | `string` | `No` | Optional bank identifier used by selected fiat provider route. |
+| `returnUrl` | `string` | `No` | URL the client should be redirected to on successful payment flow. |
+| `failUrl` | `string` | `No` | URL the client should be redirected to on failed payment flow. |
+| `additionalTimeout` | `boolean` | `No` | Extended-timeout flag for slow payment flows. |
+| <nobr>`outputPaymentProcessingType`</nobr> | `string` | `No` | Optional payment processing type for the output leg. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Order id. |
 | `number` | `number` | Human-readable order number. |
 | `conditions` | `object` | Detailed order/quote calculation breakdown. |
 | `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
+| <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
+| <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
+| `failureMessage` | `string \| null` | Human-readable reason of failure when order cannot be completed; use it for support/debugging, not as a stable business code. |
 | `input` | `object` | Source operation details object. |
 | `output` | `object` | Destination operation details object. |
 | `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
-| `input.expirationDate` / `output.expirationDate` | `string/null` | Expiration timestamp for operation leg context, if provided. |
-| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
-| `input.clientBank` / `output.clientBank` | `string/null` | Client bank metadata if returned by provider route. |
-| `input.fromToken` / `output.fromToken` | `string/null` | Source payment token used by provider leg. |
-| `input.toToken` / `output.toToken` | `string/null` | Destination payment token used by provider leg. |
-| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
-| `input.post` / `output.post` | `string/null` | Additional provider payload or form-POST metadata when present. |
-| `input.paymentSystem` / `output.paymentSystem` | `string/null` | Payment system metadata returned by provider integration. |
+| <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
+| <nobr>`input.expirationDate`</nobr> / <nobr>`output.expirationDate`</nobr> | `string \| null` | Expiration timestamp for operation leg context, if provided. |
+| `input.provider` / `output.provider` | `string \| null` | Provider code for fiat-provider operation leg. |
+| <nobr>`input.paymentType`</nobr> / <nobr>`output.paymentType`</nobr> | `string \| null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| <nobr>`input.processingBank`</nobr> / <nobr>`output.processingBank`</nobr> | `string \| null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.clientBank` / `output.clientBank` | `string \| null` | Client bank metadata if returned by provider route. |
+| `input.fromToken` / `output.fromToken` | `string \| null` | Source payment token used by provider leg. |
+| `input.toToken` / `output.toToken` | `string \| null` | Destination payment token used by provider leg. |
+| `input.link` / `output.link` | `string \| null` | Provider payment URL for redirect/confirmation flows. |
+| <nobr>`input.processorTransactionId`</nobr> / <nobr>`output.processorTransactionId`</nobr> | `string \| null` | External provider transaction id for reconciliation. |
+| `input.post` / `output.post` | `string \| null` | Additional provider payload or form-POST metadata when present. |
+| <nobr>`input.paymentSystem`</nobr> / <nobr>`output.paymentSystem`</nobr> | `string \| null` | Payment system metadata returned by provider integration. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 QUOTE_NOT_FOUND` | BUSINESS | Quote id is missing, expired, or unknown. |
-| `400 INVALID_QUOTE` | BUSINESS | Quote exists but cannot be used for sell order creation. |
-| `400 INSUFFICIENT_BALANCE` | BUSINESS | Client internal balance is not enough for requested sell operation. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no access to quote/client used by this order. |
+| --- | --- | --- |
+| `400 QUOTE_NOT_FOUND` | `BUSINESS` | Quote id is missing, expired, or unknown. |
+| `400 INVALID_QUOTE` | `BUSINESS` | Quote exists but cannot be used for sell order creation. |
+| <nobr>`400 INSUFFICIENT_BALANCE`</nobr> | `BUSINESS` | Client internal balance is not enough for requested sell operation. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no access to quote/client used by this order. |
 
 
-## 5) Operation History / Details
+## 6) Operation History / Details
 
 History endpoint is used to fetch created orders and their operation details for support, reconciliation, and client-facing history.
 
-### Step 5.1 Get order history/details
+### Step 6.1 Get order history/details
 
 Use this endpoint to fetch paged order history with optional filters and detailed operation data. Use the response to power history UI, reporting, and support investigations.
 
@@ -1274,63 +1303,71 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `page` | `number` | No | Query parameter with page index. Default example uses `0`. |
-| `size` | `number` | No | Query parameter with page size. Default example uses `20`. |
-| `sort` | `string` | No | Query parameter for sorting, for example `creationDate,desc`. |
-| `externalClientId` | `string` | Conditional | External client identifier. Required when `clientIds` is not provided. At least one client selector must be present. |
-| `clientIds` | `array of strings` | Conditional | Required when `externalClientId` is not provided. At least one client selector must be present, otherwise request fails with `Client id is required`. |
-| `operationTypes` | `array of strings` | No | Filter by operation type: `FIAT_PROVIDER`, `CRYPTO_TRANSFER`, `INTERNAL_BALANCE`. |
-| `statuses` | `array of strings` | No | Filter by order status: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `assets` | `array of strings` | No | Filter by assets. |
-| `completionDateFrame.start` | `string` | No | Completion date range start. |
-| `completionDateFrame.end` | `string` | No | Completion date range end. |
-| `creationDateFrame.start` | `string` | No | Creation date range start. |
-| `creationDateFrame.end` | `string` | No | Creation date range end. |
+| --- | --- | --- | --- |
+| `page` | `number` | `No` | Query parameter with page index. Default example uses `0`. |
+| `size` | `number` | `No` | Query parameter with page size. Default example uses `20`. |
+| `sort` | `string` | `No` | Query parameter for sorting, for example `creationDate,desc`. |
+| `clientId` | `string` | `Conditional` | Required when `externalClientId` is not provided. Used to scope the request to a specific client. |
+| <nobr>`externalClientId`</nobr> | `string` | `Conditional` | Required when `clientId` is not provided. External client identifier. |
+| `numbers` | `array of number` | `No` | Filter by human-readable order numbers. |
+| `orderIds` | `array of string` | `No` | Filter by order ids (UUID). |
+| `sessionIds` | `array of string` | `No` | Filter by SDK session ids (UUID). |
+| `statuses` | `array of string` | `No` | Filter by order status. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
+| <nobr>`creationDateFrame`</nobr> | `object` | `No` | Creation date range filter. Object `{ "from": "ISO-8601", "to": "ISO-8601" }`. |
+| <nobr>`completionDateFrame`</nobr> | `object` | `No` | Completion date range filter. Object `{ "from": "ISO-8601", "to": "ISO-8601" }`. |
+| `inputAssets` | `array of string` | `No` | Filter by source asset codes. |
+| `outputAssets` | `array of string` | `No` | Filter by destination asset codes. |
+| `assets` | `array of string` | `No` | Asset filter applied to either source or destination leg. |
+| `inputAmount` | `object` | `No` | Source amount range filter `{ "from": number, "to": number }`. |
+| `outputAmount` | `object` | `No` | Destination amount range filter `{ "from": number, "to": number }`. |
+| `destinations` | `array of string` | `No` | Filter by flow destination. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| <nobr>`fiatTransactionProviders`</nobr> | `array of string` | `No` | Filter by fiat provider id (for example `ASSIST`). |
+| <nobr>`cryptoTransactionAddresses`</nobr> | `array of string` | `No` | Filter by crypto destination addresses. |
+| <nobr>`cryptoTransactionHashes`</nobr> | `array of string` | `No` | Filter by crypto blockchain transaction hashes. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `content` | `array of objects` | Page content with order objects. |
 | `id` | `string` | Order id. |
 | `number` | `number` | Human-readable order number. |
 | `conditions` | `object` | Detailed order/quote calculation breakdown. |
 | `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
+| <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
+| <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
+| `failureMessage` | `string \| null` | Human-readable reason of failure for historical orders; useful for support and merchant-side audit. |
 | `input` | `object` | Source operation details object. |
 | `output` | `object` | Destination operation details object. |
 | `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
-| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
-| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
+| <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
+| `input.provider` / `output.provider` | `string \| null` | Provider code for fiat-provider operation leg. |
+| <nobr>`input.paymentType`</nobr> / <nobr>`output.paymentType`</nobr> | `string \| null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| <nobr>`input.processingBank`</nobr> / <nobr>`output.processingBank`</nobr> | `string \| null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.link` / `output.link` | `string \| null` | Provider payment URL for redirect/confirmation flows. |
+| <nobr>`input.processorTransactionId`</nobr> / <nobr>`output.processorTransactionId`</nobr> | `string \| null` | External provider transaction id for reconciliation. |
 | `totalElements` | `number` | Total number of matching orders. |
 | `totalPages` | `number` | Total number of pages. |
 | `number` | `number` | Current page number. |
@@ -1343,19 +1380,19 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 Bad Request` | HTTP | Filter body is invalid or missing required client filter (`Client id is required`). |
-| `400 CLIENT_NOT_FOUND` | BUSINESS | Provided client id/external client id is invalid for this merchant. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no permission for order history scope. |
-| `429 Too Many Requests` | HTTP | Rate limit is exceeded for history endpoint. |
+| --- | --- | --- |
+| `400 Bad Request` | `HTTP` | Filter body is invalid or missing required client filter (`Client id is required`). |
+| `400 CLIENT_NOT_FOUND` | `BUSINESS` | Provided client id/external client id is invalid for this merchant. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
+| `429 Too Many Requests` | `HTTP` | Rate limit is exceeded for history endpoint. |
 
 
-## 6) Conversion (`conversion`)
+## 7) Conversion (`conversion`)
 
 For custodial wallet, conversion goes through internal balance (`USER_BALANCE` / `INTERNAL_BALANCE`).
 
-### Step 6.1 Check limits
+### Step 7.1 Check limits
 
 Use this endpoint to check conversion min/max limits for the selected asset pair. Use the response to validate entered amounts before quote creation.
 
@@ -1394,23 +1431,24 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `fromAsset` | `string` | Yes | Source asset. |
-| `fromPaymentDetails.type` | `string` | Yes | Source payment type. For conversion use `INTERNAL_BALANCE`. |
-| `toAsset` | `string` | Yes | Destination asset. |
-| `toPaymentDetails.type` | `string` | Yes | Destination payment type. For conversion use `INTERNAL_BALANCE`. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `fromAsset` | `string` | `Yes` | Source asset. |
+| <nobr>`fromPaymentDetails.type`</nobr> | `string` | `Yes` | Source payment type. For conversion use `INTERNAL_BALANCE`. |
+| `toAsset` | `string` | `Yes` | Destination asset. |
+| <nobr>`toPaymentDetails.type`</nobr> | `string` | `Yes` | Destination payment type. For conversion use `INTERNAL_BALANCE`. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `fromMinAmount` | `string` | Minimum allowed source amount. |
 | `fromMaxAmount` | `string` | Maximum allowed source amount. |
 | `toMinAmount` | `string` | Minimum allowed destination amount. |
@@ -1419,15 +1457,15 @@ Use this endpoint to check conversion min/max limits for the selected asset pair
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_MERCHANT_ID` | BUSINESS | No merchant identifier could be resolved for limit calculation context. |
-| `400 INVALID_QUOTE` | BUSINESS | Limit request contains invalid pair/payment details for calculation context. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no `LIMIT_V2_API` permission. |
-| `429 Too Many Requests` | HTTP | Rate limit is exceeded for limit endpoint. |
+| --- | --- | --- |
+| `400 INVALID_MERCHANT_ID` | `BUSINESS` | No merchant identifier could be resolved for limit calculation context. |
+| `400 INVALID_QUOTE` | `BUSINESS` | Limit request contains invalid pair/payment details for calculation context. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
+| `429 Too Many Requests` | `HTTP` | Rate limit is exceeded for limit endpoint. |
 
 
-### Step 6.2 Create quote
+### Step 7.2 Create quote
 
 Use this endpoint to create a conversion quote between internal balance assets. Use the response to show conversion terms and pass quote id to swap creation.
 
@@ -1483,27 +1521,29 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `clientId` | `string` | Yes | Client identifier used to scope the request to a specific client. |
-| `input.type` | `string` | Yes | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `input.asset` | `string` | Yes | Source asset code. |
-| `input.amount` | `number` | Conditional | Source amount for quote/order calculation. |
-| `output.type` | `string` | Yes | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
-| `output.asset` | `string` | Yes | Destination asset code. |
-| `output.amount` | `number` | Conditional | Destination amount for quote/order calculation. |
+| --- | --- | --- | --- |
+| `clientId` | `string` | `Yes` | Client identifier used to scope the request to a specific client. |
+| `input.type` | `string` | `Yes` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `input.asset` | `string` | `Yes` | Source asset code. |
+| `input.amount` | `number` | `Conditional` | Source amount for quote/order calculation. |
+| `output.type` | `string` | `Yes` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
+| `output.asset` | `string` | `Yes` | Destination asset code. |
+| `output.amount` | `number` | `Conditional` | Destination amount for quote/order calculation. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Quote id used for conversion order. |
-| `rate` | `string` | Rate pair for the operation. |
+| `rate` | `string` | Rate pair for the operation. Display this value to the client as the final pair label. |
 | `systemRateValue` | `string` | Base system rate at calculation time. |
 | `exchangeRateValue` | `string` | Exchange rate applied to this quote/order. |
 | `actualRateValue` | `string` | Effective client-facing rate after adjustments. |
@@ -1524,15 +1564,15 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 INVALID_QUOTE` | BUSINESS | Quote input is inconsistent or cannot be calculated. |
-| `400 CURRENCY_NOT_FOUND` | BUSINESS | Asset id is unknown for conversion pair. |
-| `400 INVALID_CLIENT_STATUS` | BUSINESS | Client status/checks do not allow conversion quote creation. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no `ORDER_V2_API` permission. |
+| --- | --- | --- |
+| `400 INVALID_QUOTE` | `BUSINESS` | Quote input is inconsistent or cannot be calculated. |
+| `400 CURRENCY_NOT_FOUND` | `BUSINESS` | Asset id is unknown for conversion pair. |
+| <nobr>`400 INVALID_CLIENT_STATUS`</nobr> | `BUSINESS` | Client status/checks do not allow conversion quote creation. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-### Step 6.3 Create swap operation
+### Step 7.3 Create swap operation
 
 Use this endpoint to create and execute a swap operation from a valid conversion quote. Use the response to persist order identifiers and final operation statuses.
 
@@ -1603,61 +1643,69 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 ### Headers
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `x-api-key` | `string` | Yes | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
+| --- | --- | --- | --- |
+| <nobr>`x-api-key`</nobr> | `string` | `Yes` | Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment. |
 
 ### Request
 
 | Name | Type | Required | Description |
-|---|---|---:|---|
-| `quoteId` | `string` | Yes | Quote identifier returned by quote creation; required to create an order before quote expiration. |
+| --- | --- | --- | --- |
+| `quoteId` | `string` | `Yes` | Quote identifier returned by quote creation; required to create an order before quote expiration. |
+| <nobr>`destinationCryptoAddress`</nobr> | `string` | `No` | Destination wallet address for crypto-out flows (used when `output.type` is `CRYPTO_TRANSFER`). |
+| `comment` | `string` | `No` | Optional. Used only for the TON network as a transfer memo for the recipient. For other networks the value is ignored. Format: free-form string provided by the receiving party (exchange/wallet). |
+| `bankIdentifier` | `string` | `No` | Optional bank identifier used by selected fiat provider route. |
+| `returnUrl` | `string` | `No` | URL the client should be redirected to on successful payment flow. |
+| `failUrl` | `string` | `No` | URL the client should be redirected to on failed payment flow. |
+| `additionalTimeout` | `boolean` | `No` | Extended-timeout flag for slow payment flows. |
+| <nobr>`outputPaymentProcessingType`</nobr> | `string` | `No` | Optional payment processing type for the output leg. |
+| `destination` | `string` | `No` | Optional flow destination filter. Recommended value: `EXCHANGE`. Allowed values: `EXCHANGE`, `SDK_EXCHANGE`, `ACCOUNTING`, `SDK_ACCOUNTING`, `SDK_CROSS`. |
 
 ### Response
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `id` | `string` | Conversion order id. |
 | `number` | `number` | Human-readable order number. |
 | `conditions` | `object` | Detailed order/quote calculation breakdown. |
 | `conditions.fromAsset` | `string` | Source asset code in calculation conditions. |
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
-| `conditions.fromGrossAmount` | `string` | Source gross amount before source-side fees. |
-| `conditions.fromNetAmount` | `string` | Source net amount in calculation conditions. |
-| `conditions.fromFeeAmount` | `string` | Source-side fee amount in calculation conditions. |
-| `conditions.toGrossAmount` | `string` | Destination gross amount before destination-side fees. |
-| `conditions.toNetAmount` | `string` | Destination net amount in calculation conditions. |
-| `conditions.toFeeAmount` | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
+| <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
+| <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
-| `conditions.systemRateValue` | `string` | Base system rate at calculation time. |
-| `conditions.exchangeRateValue` | `string` | Exchange rate value in calculation conditions. |
-| `conditions.actualRateValue` | `string` | Effective client-facing rate value in calculation conditions. |
+| <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
+| <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
+| <nobr>`conditions.actualRateValue`</nobr> | `string` | Effective client-facing rate value in calculation conditions. |
 | `clientId` | `string` | Client identifier used to scope the request to a specific client. |
 | `status` | `string` | Current order lifecycle state. Allowed values: `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `failureMessage` | `string/null` | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
+| `failureMessage` | `string \| null` | Human-readable reason of failure when conversion cannot be completed; use for support/debugging. |
 | `input` | `object` | Source operation details object. |
 | `output` | `object` | Destination operation details object. |
 | `input.type` / `output.type` | `string` | Operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
-| `input.transactionAmount` / `output.transactionAmount` | `string` | Provider/settlement amount for operation leg. |
-| `input.feeAmount` / `output.feeAmount` | `string` | Fee amount on each operation leg. |
+| <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
-| `input.failureMessage` / `output.failureMessage` | `string/null` | Failure reason for a specific operation leg. |
-| `input.expirationDate` / `output.expirationDate` | `string/null` | Expiration timestamp for operation leg context, if provided. |
-| `input.provider` / `output.provider` | `string/null` | Provider code for fiat-provider operation leg. |
-| `input.paymentType` / `output.paymentType` | `string/null` | Provider payment type metadata (for example `P2P`, `SBP`). |
-| `input.processingBank` / `output.processingBank` | `string/null` | Processing bank metadata for fiat-provider operation leg. |
-| `input.link` / `output.link` | `string/null` | Provider payment URL for redirect/confirmation flows. |
-| `input.processorTransactionId` / `output.processorTransactionId` | `string/null` | External provider transaction id for reconciliation. |
+| <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
+| <nobr>`input.expirationDate`</nobr> / <nobr>`output.expirationDate`</nobr> | `string \| null` | Expiration timestamp for operation leg context, if provided. |
+| `input.provider` / `output.provider` | `string \| null` | Provider code for fiat-provider operation leg. |
+| <nobr>`input.paymentType`</nobr> / <nobr>`output.paymentType`</nobr> | `string \| null` | Provider payment type metadata (for example `P2P`, `SBP`). |
+| <nobr>`input.processingBank`</nobr> / <nobr>`output.processingBank`</nobr> | `string \| null` | Processing bank metadata for fiat-provider operation leg. |
+| `input.link` / `output.link` | `string \| null` | Provider payment URL for redirect/confirmation flows. |
+| <nobr>`input.processorTransactionId`</nobr> / <nobr>`output.processorTransactionId`</nobr> | `string \| null` | External provider transaction id for reconciliation. |
 
 ### Errors
 
 | Name | Code | Description |
-|---|---|---|
-| `400 QUOTE_NOT_FOUND` | BUSINESS | Quote id is missing, expired, or unknown. |
-| `400 INVALID_QUOTE` | BUSINESS | Quote exists but cannot be used for conversion order creation. |
-| `400 INSUFFICIENT_BALANCE` | BUSINESS | Source internal balance is not enough to execute conversion. |
-| `401 Unauthorized` | HTTP | `x-api-key` is missing, invalid, or expired. |
-| `403 Forbidden` | HTTP | Merchant has no access to quote/client used by this conversion. |
+| --- | --- | --- |
+| `400 QUOTE_NOT_FOUND` | `BUSINESS` | Quote id is missing, expired, or unknown. |
+| `400 INVALID_QUOTE` | `BUSINESS` | Quote exists but cannot be used for conversion order creation. |
+| <nobr>`400 INSUFFICIENT_BALANCE`</nobr> | `BUSINESS` | Source internal balance is not enough to execute conversion. |
+| `401 Unauthorized` | `HTTP` | `x-api-key` is missing, invalid, or expired. |
+| `403 Forbidden` | `HTTP` | Merchant has no access to quote/client used by this conversion. |
 
 
