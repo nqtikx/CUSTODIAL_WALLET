@@ -773,35 +773,6 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
   </tbody>
 </table>
 
-#### Payment method `status` values
-
-<table width="100%">
-  <thead>
-    <tr>
-      <th style="word-break: break-word; white-space: normal;">Value</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="word-break: break-word; white-space: normal;">ENABLED</td>
-      <td>Payment method is available for the requested direction and currency.</td>
-    </tr>
-    <tr>
-      <td style="word-break: break-word; white-space: normal;">DIRECTION_DISABLED</td>
-      <td>Provider has no route for the requested orderType (BUY/SELL).</td>
-    </tr>
-    <tr>
-      <td style="word-break: break-word; white-space: normal;">CURRENCY_DISABLED</td>
-      <td>Direction is supported, but fiatAsset is not in supportedCurrencies of the route.</td>
-    </tr>
-    <tr>
-      <td style="word-break: break-word; white-space: normal;">UNKNOWN</td>
-      <td>orderType or fiatAsset was not provided in the request and the status cannot be resolved.</td>
-    </tr>
-  </tbody>
-</table>
-
 ### Errors
 
 <table width="100%">
