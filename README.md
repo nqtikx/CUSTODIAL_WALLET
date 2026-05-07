@@ -5,26 +5,6 @@ In the UI, these are 5 quick actions (`Deposit`, `Send`, `Buy`, `Sell`, `Convers
 
 > BASE_URL https://api.dev.wbdevel.net
 
-## Navigation
-
-- [Step 1.1 Get available assets](#step-11-get-available-assets)
-- [Step 1.2 Get current balance operations](#step-12-get-current-balance-operations)
-- [Step 2.1 Create crypto deposit](#step-21-create-crypto-deposit)
-- [Step 2.2 Get fiat payment methods](#step-22-get-fiat-payment-methods)
-- [Step 2.3 Create fiat deposit](#step-23-create-fiat-deposit)
-- [Step 3.1 Calculate crypto withdrawal](#step-31-calculate-crypto-withdrawal)
-- [Step 3.2 Create crypto withdrawal](#step-32-create-crypto-withdrawal)
-- [Step 3.3 Calculate fiat withdrawal](#step-33-calculate-fiat-withdrawal)
-- [Step 3.4 Create fiat withdrawal](#step-34-create-fiat-withdrawal)
-- [Step 4.1 Create quote](#step-41-create-quote)
-- [Step 4.2 Create buy order](#step-42-create-buy-order)
-- [Step 5.1 Create quote](#step-51-create-quote)
-- [Step 5.2 Create sell order](#step-52-create-sell-order)
-- [Step 6.1 Get order history/details](#step-61-get-order-historydetails)
-- [Step 7.1 Check limits](#step-71-check-limits)
-- [Step 7.2 Create quote](#step-72-create-quote)
-- [Step 7.3 Create swap operation](#step-73-create-swap-operation)
-
 ## 1) Base Data
 
 Base data endpoints are used before any wallet operation. They help the merchant show available assets, current operations, and account balances to the client.
