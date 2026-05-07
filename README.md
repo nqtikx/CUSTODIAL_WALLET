@@ -270,7 +270,7 @@ Use this endpoint to retrieve available fiat payment methods for the selected cl
         "isRestricted": false,
         "isCrypto": false,
         "country": "Russia"
-    },
+    }
 ]
 ```
 
@@ -673,13 +673,13 @@ Use this endpoint to create a fiat withdrawal from custodial wallet balance. Use
 | `403 Forbidden` | `HTTP` | Merchant has no permission for this operation. |
 
 
-## 4) OnRamp (fiat -> crypto)
+## 4) Buy crypto (`buy`)
 
-OnRamp flow is used when the client pays fiat through a provider and receives crypto to internal wallet balance. The flow is quote first, then order creation.
+Buy crypto flow is used when the client pays fiat through a provider and receives crypto to internal wallet balance. The flow is quote first, then order creation.
 
 ### Step 4.1 Create quote
 
-Use this endpoint to create a buy quote and lock rate/amounts for a short time. Use the response to display final buy terms and pass quote id to order creation.
+Use this endpoint to create a buy crypto quote and lock rate/amounts for a short time. Use the response to display final buy terms and pass quote id to order creation.
 
 **POST** `/api/v3/exchange/merchant/quote`
 
@@ -775,7 +775,7 @@ Use this endpoint to create a buy quote and lock rate/amounts for a short time. 
 | `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Source asset code. |
 | `input.amount` | `string` | Source amount used in quote calculation. |
-| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg, in the corresponding leg asset currency (`input.asset` / `output.asset`). |
 | `input.provider` | `string \| null` | Fiat provider code for source leg when source type is `FIAT_PROVIDER`. |
 | `input.token` | `string \| null` | Payment token used by provider source leg, if required by provider flow. |
 | `input.paymentType` | `string` | Fiat payment type selected by provider configuration. |
@@ -906,10 +906,10 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
 | <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
 | <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
-| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions, in `conditions.fromAsset` currency. |
 | <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
-| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
 | <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
 | <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
@@ -927,7 +927,7 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
 | <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
-| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg, in the corresponding leg asset currency (`input.asset` / `output.asset`). |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
 | <nobr>`input.expirationDate`</nobr> / <nobr>`output.expirationDate`</nobr> | `string \| null` | Expiration timestamp for operation leg context, if provided. |
@@ -954,13 +954,13 @@ Use this endpoint to create a buy order from a valid non-expired quote. Use the 
 | `403 Forbidden` | `HTTP` | Merchant has no access to quote/client used by this order. |
 
 
-## 5) OffRamp (crypto -> fiat)
+## 5) Sell crypto (`sell`)
 
-OffRamp flow is used when the client sells crypto from internal wallet balance and receives fiat through a provider.
+Sell crypto flow is used when the client sells crypto from internal wallet balance and receives fiat through a provider.
 
 ### Step 5.1 Create quote
 
-Use this endpoint to create a sell quote and lock rate/amounts for OffRamp flow. Use the response to show sell terms and pass quote id to order creation.
+Use this endpoint to create a sell crypto quote and lock rate/amounts for sell flow. Use the response to show sell terms and pass quote id to order creation.
 
 **POST** `/api/v3/exchange/merchant/quote`
 
@@ -1055,11 +1055,11 @@ Use this endpoint to create a sell quote and lock rate/amounts for OffRamp flow.
 | `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Source asset code. |
 | `input.amount` | `string` | Source amount used in quote calculation. |
-| `input.feeAmount` | `string` | Fee amount on source leg. |
+| `input.feeAmount` | `string` | Fee amount on source leg, in `input.asset` currency. |
 | `output.type` | `string` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | Destination asset code. |
 | `output.amount` | `string` | Destination amount for quote/order calculation. |
-| `output.feeAmount` | `string` | Fiat provider/exchange fee amount. |
+| `output.feeAmount` | `string` | Fiat provider/exchange fee amount, in `output.asset` currency. |
 | `output.provider` | `string \| null` | Fiat provider code for destination leg when destination type is `FIAT_PROVIDER`. |
 | `output.token` | `string \| null` | Payment token used by provider destination leg, if required by provider flow. |
 | `output.paymentType` | `string` | Fiat payment type. |
@@ -1185,10 +1185,10 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
 | <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
 | <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
-| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions, in `conditions.fromAsset` currency. |
 | <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
-| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
 | <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
 | <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
@@ -1202,7 +1202,7 @@ Use this endpoint to create a sell order from a valid non-expired quote. Use the
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
 | <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
-| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg, in the corresponding leg asset currency (`input.asset` / `output.asset`). |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
 | <nobr>`input.expirationDate`</nobr> / <nobr>`output.expirationDate`</nobr> | `string \| null` | Expiration timestamp for operation leg context, if provided. |
@@ -1343,10 +1343,10 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
 | <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
 | <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
-| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions, in `conditions.fromAsset` currency. |
 | <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
-| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
 | <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
 | <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
@@ -1360,7 +1360,7 @@ Use this endpoint to fetch paged order history with optional filters and detaile
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
 | <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
-| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg, in the corresponding leg asset currency (`input.asset` / `output.asset`). |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
 | `input.provider` / `output.provider` | `string \| null` | Provider code for fiat-provider operation leg. |
@@ -1555,11 +1555,11 @@ Use this endpoint to create a conversion quote between internal balance assets. 
 | `input.type` | `string` | Source operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `input.asset` | `string` | Source asset code. |
 | `input.amount` | `string` | Source amount used in quote calculation. |
-| `input.feeAmount` | `string` | Fee amount on source leg. |
+| `input.feeAmount` | `string` | Fee amount on source leg, in `input.asset` currency. |
 | `output.type` | `string` | Destination operation channel. Allowed values: `INTERNAL_BALANCE`, `FIAT_PROVIDER`, `CRYPTO_TRANSFER`. |
 | `output.asset` | `string` | Destination asset code. |
 | `output.amount` | `string` | Destination amount used in quote calculation. |
-| `output.feeAmount` | `string` | Fee amount on destination leg. |
+| `output.feeAmount` | `string` | Fee amount on destination leg, in `output.asset` currency. |
 
 ### Errors
 
@@ -1671,10 +1671,10 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 | `conditions.toAsset` | `string` | Destination asset code in calculation conditions. |
 | <nobr>`conditions.fromGrossAmount`</nobr> | `string` | Source gross amount before source-side fees. |
 | <nobr>`conditions.fromNetAmount`</nobr> | `string` | Source net amount in calculation conditions. |
-| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions. |
+| <nobr>`conditions.fromFeeAmount`</nobr> | `string` | Source-side fee amount in calculation conditions, in `conditions.fromAsset` currency. |
 | <nobr>`conditions.toGrossAmount`</nobr> | `string` | Destination gross amount before destination-side fees. |
 | <nobr>`conditions.toNetAmount`</nobr> | `string` | Destination net amount in calculation conditions. |
-| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions. |
+| <nobr>`conditions.toFeeAmount`</nobr> | `string` | Destination-side fee amount in calculation conditions, in `conditions.toAsset` currency. |
 | `conditions.rate` | `string` | Rate pair in calculation conditions. |
 | <nobr>`conditions.systemRateValue`</nobr> | `string` | Base system rate at calculation time. |
 | <nobr>`conditions.exchangeRateValue`</nobr> | `string` | Exchange rate value in calculation conditions. |
@@ -1688,7 +1688,7 @@ Use this endpoint to create and execute a swap operation from a valid conversion
 | `input.asset` / `output.asset` | `string` | Asset code used for each operation leg. |
 | `input.amount` / `output.amount` | `string` | Operation amount for each leg. |
 | <nobr>`input.transactionAmount`</nobr> / <nobr>`output.transactionAmount`</nobr> | `string` | Provider/settlement amount for operation leg. |
-| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg. |
+| <nobr>`input.feeAmount`</nobr> / <nobr>`output.feeAmount`</nobr> | `string` | Fee amount on each operation leg, in the corresponding leg asset currency (`input.asset` / `output.asset`). |
 | `input.status` / `output.status` | `string` | Leg status. Allowed values: `NEW`, `PROCESSING`, `EXPIRED`, `COMPLETED`, `FAILED`. |
 | <nobr>`input.failureMessage`</nobr> / <nobr>`output.failureMessage`</nobr> | `string \| null` | Failure reason for a specific operation leg. |
 | <nobr>`input.expirationDate`</nobr> / <nobr>`output.expirationDate`</nobr> | `string \| null` | Expiration timestamp for operation leg context, if provided. |
