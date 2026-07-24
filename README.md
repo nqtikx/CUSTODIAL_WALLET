@@ -569,12 +569,12 @@ Use this endpoint to retrieve the client's custodial wallet balances (`USER_BALA
     <tr>
       <td style="word-break: break-word; white-space: normal;">balances[].tax</td>
       <td>number</td>
-      <td>Calculated tax amount (amount * 0.14, scale 2). Informational field.</td>
+      <td>Calculated tax amount (amount * 0.14, scale 2).</td>
     </tr>
     <tr>
       <td style="word-break: break-word; white-space: normal;">balances[].netAmount</td>
       <td>number</td>
-      <td>amount - tax. Informational field.</td>
+      <td>amount - tax.</td>
     </tr>
     <tr>
       <td style="word-break: break-word; white-space: normal;">balances[].creationDate</td>
