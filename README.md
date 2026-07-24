@@ -424,6 +424,211 @@ Use this endpoint to fetch the client's current fiat and crypto wallet operation
   </tbody>
 </table>
 
+### Step 1.3 Get client account balances
+
+Use this endpoint to retrieve the client's custodial wallet balances (`USER_BALANCE`) by asset. Use the response to show available amounts in UI before deposit, withdrawal, buy, sell, or conversion.
+
+**POST** `/api/v2/accounting/merchant/account`
+
+**Headers**
+ - `x-api-key: {{x-api-key}}`
+
+**Request**
+
+```json
+{
+  "clientId": "{{clientId}}",
+  "type": "USER_BALANCE"
+}
+```
+
+**Response**
+
+```json
+{
+  "balances": [
+   {
+       "amount": 0.00334295,
+       "creationDate": "2024-11-28T13:19:52.688Z",
+       "currency": "BTC",
+       "modificationDate": "2026-07-21T12:25:42.362Z",
+       "netAmount": 0.00334295,
+       "tax": 0.00,
+       "type": "USER_BALANCE"
+   },
+   {
+       "amount": 0.00660000,
+       "creationDate": "2024-11-28T13:19:52.688Z",
+       "currency": "ETH",
+       "modificationDate": "2026-05-25T08:25:16.101Z",
+       "netAmount": 0.00660000,
+       "tax": 0.00,
+       "type": "USER_BALANCE"
+   }
+  ]
+}
+```
+
+**Headers**
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="197" style="word-break: break-word; white-space: normal;">Name</th>
+      <th width="120">Type</th>
+      <th width="100">Required</th>
+      <th width="583">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">x-api-key</td>
+      <td>string</td>
+      <td>Yes</td>
+      <td>Authenticates the merchant server-to-server request. Use the API key issued for the merchant and target environment.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">externalClientId</td>
+      <td>string</td>
+      <td>No</td>
+      <td>Optional external client identifier used in merchant access validation.</td>
+    </tr>
+  </tbody>
+</table>
+
+**Request**
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="194" style="word-break: break-word; white-space: normal;">Name</th>
+      <th width="120">Type</th>
+      <th width="100">Required</th>
+      <th width="586">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">clientId</td>
+      <td>string</td>
+      <td>Yes</td>
+      <td>Client identifier used to scope balances to a specific client. Required unless userId is provided.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">userId</td>
+      <td>string</td>
+      <td>No</td>
+      <td>Alternative client resolution key. Used only when clientId is not set.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">assets</td>
+      <td>array of string</td>
+      <td>No</td>
+      <td>Optional list of asset codes to filter balances. If omitted, returns all USER_BALANCE accounts for the client.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">type</td>
+      <td>string</td>
+      <td>No</td>
+      <td>Ignored for merchant API. Server always forces USER_BALANCE.</td>
+    </tr>
+  </tbody>
+</table>
+
+**Response**
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="258" style="word-break: break-word; white-space: normal;">Name</th>
+      <th width="140">Type</th>
+      <th width="602">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances</td>
+      <td>array of objects</td>
+      <td>List of client custodial wallet balances.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].currency</td>
+      <td>string</td>
+      <td>Asset/currency code of the balance account (for example BYN, USDT, TRX).</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].type</td>
+      <td>string</td>
+      <td>Account type. For this endpoint always USER_BALANCE.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].amount</td>
+      <td>number</td>
+      <td>Available balance = credit - debit. This is the amount available for wallet operations.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].tax</td>
+      <td>number</td>
+      <td>Calculated tax amount (amount * 0.14, scale 2). Informational field.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].netAmount</td>
+      <td>number</td>
+      <td>amount - tax. Informational field.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].creationDate</td>
+      <td>string</td>
+      <td>Account creation date/time.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">balances[].modificationDate</td>
+      <td>string</td>
+      <td>Account last modification date/time.</td>
+    </tr>
+  </tbody>
+</table>
+
+**Errors**
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="240" style="word-break: break-word; white-space: normal;">Name</th>
+      <th width="120">Code</th>
+      <th width="640">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">400 CLIENT_NOT_FOUND</td>
+      <td>BUSINESS</td>
+      <td>Client id is invalid or not linked to the merchant in access validation.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">400 Bad Request</td>
+      <td>HTTP</td>
+      <td>Request body is invalid or cannot be parsed.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">401 Unauthorized</td>
+      <td>HTTP</td>
+      <td>x-api-key is missing, invalid, or expired.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">403 Forbidden</td>
+      <td>HTTP</td>
+      <td>Merchant has no permission for this operation.</td>
+    </tr>
+    <tr>
+      <td style="word-break: break-word; white-space: normal;">429 Too Many Requests</td>
+      <td>HTTP</td>
+      <td>Rate limit is exceeded for this endpoint.</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## 2) Deposit (`deposit`)
 
 ### Step 2.1 Create crypto deposit
